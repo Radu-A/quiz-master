@@ -1,0 +1,15 @@
+Temáticas
+
+1 Cibercultura y Frikismo - Desde las entrañas del código y la historia hacker hasta los secretos mejor guardados del cine, la literatura y los videojuegos.
+
+2 Biología Extrema - Criaturas indestructibles, mecanismos de defensa letales, venenos exóticos y rarezas de la flora y fauna mundial.
+
+3 Paradojas Cósmicas - Viajes en el tiempo, física cuántica, agujeros negros y experimentos mentales que desafían la lógica humana.
+
+4 Legalmente Absurdo - Normas vigentes, prohibiciones extrañas y leyes históricas de distintos países que parecen una auténtica broma.
+
+5 Manual de Supervivencia - Qué hacer en situaciones límite, cómo sobrevivir a la naturaleza salvaje y los peligros ocultos en la gastronomía extrema.
+
+Quiero que modifiques el import.sql y que hagas 5 preguntas de cada tipo (verdadero/falso, respuesta única, respuesta múltiple) para cada temática.
+
+Los insert into tienen que respetar las relaciones y estructuras actuales, con un cambio. Añade la propiedad descripción a la entidad Tematica y la columna correspondiente a su tabla.

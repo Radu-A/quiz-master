@@ -1,6 +1,6 @@
 # repaso-ia
 
-Spring Boot 4.0.6 / Java 17 project. Multi-layer (Controller -> Service -> Repository -> Entity).
+Spring Boot 4.0.6 / Java 17. Multi-layer (Controller -> Service -> Repository -> Entity).
 
 ## Commands
 
@@ -10,12 +10,22 @@ Spring Boot 4.0.6 / Java 17 project. Multi-layer (Controller -> Service -> Repos
 ./mvnw verify             # test + package (jar in target/)
 ```
 
-## Notable
+## Package structure
 
-- **Spring Boot 4 modular starters** — this project uses the explicit `-webmvc`, `-thymeleaf`, `-validation`, `-data-jpa` (and `-test` variants) rather than the monolithic `-starter-web`. Add dependencies the same way.
-- **Persistence:** Spring Data JPA. Profile `dev` = H2, `prod` = MySQL.
-- **Package** = `com.github.Radu_A.evaluacion_final` (hyphen replaced with underscore because `-` is invalid in Java packages). 
-- Strictly separate concerns into standard Spring Boot packages: `model` (or `entity`), `repository`, `service`, and `controller`.
-- **Java 17** — no record/pattern-matching lint restrictions; feel free to use modern Java.
-- `application.properties` currently only has `spring.application.name=repaso-ia`.
-- **UI (Thymeleaf)** - Local Bootstrap from `src/main/resources/static/`
+`com.github.Radu_A.evaluacion_final` — controller, dto, entity, exception, repository, security, service.
+
+## Dependencies
+
+- Uses **modular starters**: `-webmvc`, `-thymeleaf`, `-validation`, `-data-jpa`. Add new ones the same way.
+- **Lombok** is present — do not add manual getters/setters/constructors; annotate instead.
+- Persistence: Spring Data JPA. Schema auto-created (`ddl-auto=create`) on startup.
+- **H2 console** enabled at `/h2-console`.
+- Profile `dev` = H2 (in-memory), `prod` = MySQL (credentials not in `application.properties`).
+
+## UI
+
+Thymeleaf templates. Local Bootstrap from `src/main/resources/static/`.
+
+## Config
+
+`application.properties` has full H2/JPA config — do not assume it only has the app name.
