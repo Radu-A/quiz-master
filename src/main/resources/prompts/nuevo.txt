@@ -1,0 +1,12 @@
+Quiero que el formulario de nuevo cambie al seleccionar el tipo de pregunta:
+
+Verdadero/falso:
+- Seleccionar si la respuesta es verdadera o falsa
+
+Selección única:
+- Escribir cuatro respuestas
+- Marcar UNA respuesta correcta
+
+Selección múltiple:
+- Escribir cinco respuestas
+- Marcar LAS respuestas correctas

@@ -1,0 +1,24 @@
+Actúa como un desarrollador experto en Spring Boot, Thymeleaf y Bootstrap. Necesito crear la vista HTML para el menú de administración de preguntas (/preguntas/menu.html). Esta vista debe integrarse en un proyecto con arquitectura limpia y cumplir con los siguientes requisitos visuales y técnicos:
+
+1. Diseño y Encabezado:
+- Los estilos seguirán la línea del home. El diseño debe ser moderno, limpio, profesional ("increíble"), con una paleta de colores atractiva (por ejemplo, tonos oscuros/azules profesionales o modo claro minimalista con contrastes nítidos), componentes con bordes ligeramente redondeados (shadows sutiles) y una experiencia de usuario impecable.
+- Incluye un título atractivo (ej. "Banco de Preguntas") y un párrafo descriptivo que explique que desde aquí se gestiona el catálogo de preguntas del sistema.
+- En la parte superior, alineado a la derecha, coloca un botón destacado para "Crear Nueva Pregunta" (con un icono si es posible) que apunte temporalmente a th:href="@{/preguntas/crear}".
+
+2. Zona de Filtros:
+- Diseña una barra de filtrado previa a la tabla con dos selectores desplegables (Selects):
+  - Filtro por Temática - Almacenadas en la db H2.
+  - Filtro por Tipo de Pregunta (Verdadero/Falso, Selección Única, Selección Múltiple).
+  - Incluye un botón de "Filtrar" y otro de "Limpiar filtros". Deja los nombres de los atributos de Thymeleaf preparados aunque la lógica del controlador se implemente después.
+
+3. Tabla de Datos (Listado):
+- La tabla debe ser responsive y tener un diseño espectacular.
+- Columnas requeridas:
+  - ID
+  - Enunciado de la Pregunta
+  - Tipo de Pregunta (Usa Badges de Bootstrap de diferentes colores según el tipo: V/F, Única, Múltiple).
+  - Respuestas/Opciones: Como hay preguntas con múltiples respuestas, muestra las opciones de forma muy limpia (por ejemplo, una lista muy compacta text-muted o badges pequeños dentro de la celda) para que no ensucie el diseño visual.
+  - Acciones: Boton group para "Editar" y "Eliminar".
+
+4. Paginación:
+- Debajo de la tabla, incluye un componente de paginación de Bootstrap (ul.pagination) preparado para iterar sobre un objeto "Page" de Spring Data (usando las variables habituales como preguntas.number, preguntas.totalPages, etc.).

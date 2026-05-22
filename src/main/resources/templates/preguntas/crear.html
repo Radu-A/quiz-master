@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Crear Pregunta &mdash; QuizMaster</title>
+</head>
+<body>
+
+<section>
+
+    <div class="admin-hero">
+        <div class="container">
+            <span class="badge-pill">Panel de Administración</span>
+            <h1>
+                Crear
+                <span class="highlight">Nueva Pregunta</span>
+            </h1>
+            <p>
+                Completa el formulario para añadir una nueva pregunta al banco. Selecciona el tipo,
+                redacta el enunciado y define las respuestas correctas.
+            </p>
+        </div>
+    </div>
+
+    <div class="admin-content">
+        <div class="container">
+            <div class="form-container">
+
+                <div th:if="${mensaje}" class="alert-flash"
+                     th:classappend="${tipoMensaje == 'error' ? 'alert-flash-error' : ''}">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span th:text="${mensaje}">Mensaje</span>
+                </div>
+
+                <div class="form-card">
+                    <div class="form-header">
+                        <h2>Formulario de Pregunta</h2>
+                        <p>Todos los campos marcados con <span class="required">*</span> son obligatorios.</p>
+                    </div>
+
+                    <form method="post" th:action="@{/preguntas/crear}" id="formCrearPregunta"
+                          novalidate autocomplete="off">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="tipoPregunta" class="form-label">
+                                    Tipo de Pregunta <span class="required">*</span>
+                                </label>
+                                <select id="tipoPregunta" name="tipoPregunta" class="form-select" required>
+                                    <option value="">Selecciona un tipo...</option>
+                                    <option value="VERDADERO_FALSO">Verdadero / Falso</option>
+                                    <option value="SELECCION_UNICA">Selección Única</option>
+                                    <option value="SELECCION_MULTIPLE">Selección Múltiple</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="tematicaId" class="form-label">
+                                    Temática <span class="required">*</span>
+                                </label>
+                                <select id="tematicaId" name="tematicaId" class="form-select" required>
+                                    <option value="">Selecciona una temática...</option>
+                                    <option th:each="t : ${tematicas}"
+                                            th:value="${t.id}"
+                                            th:text="${t.nombre}">Temática</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="enunciado" class="form-label">
+                                Enunciado <span class="required">*</span>
+                            </label>
+                            <textarea id="enunciado" name="enunciado" class="form-textarea"
+                                      placeholder="Escribe el enunciado de la pregunta..."
+                                      required maxlength="500"></textarea>
+                            <div class="form-hint">Máximo 500 caracteres.</div>
+                        </div>
+
+                        <!-- === Verdadero / Falso === -->
+                        <div class="type-section" id="sectionVF">
+                            <div class="type-section-header">
+                                <span class="type-indicator indicator-false"></span>
+                                <h3>Respuesta correcta</h3>
+                            </div>
+                            <div class="vf-options">
+                                <div class="vf-option">
+                                    <input type="radio" id="vfTrue" name="respuestaCorrecta" value="true">
+                                    <label for="vfTrue" class="vf-option-label">
+                                        <span class="vf-option-icon icon-true">V</span>
+                                        Verdadero
+                                    </label>
+                                </div>
+                                <div class="vf-option">
+                                    <input type="radio" id="vfFalse" name="respuestaCorrecta" value="false">
+                                    <label for="vfFalse" class="vf-option-label">
+                                        <span class="vf-option-icon icon-false">F</span>
+                                        Falso
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- === Selección Única === -->
+                        <div class="type-section" id="sectionSU">
+                            <div class="type-section-header">
+                                <span class="type-indicator indicator-only"></span>
+                                <h3>Opciones de respuesta</h3>
+                            </div>
+                            <div class="options-list" id="optionsListSU">
+                                <div class="option-correct-label" style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.25rem;padding-left:32px;">
+                                    <span style="width:44px;text-align:center;font-size:0.72rem;font-weight:700;color:var(--text-muted);">Correcta</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-add-option" onclick="addOption('SU')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="8" x2="12" y2="16"/>
+                                    <line x1="8" y1="12" x2="16" y2="12"/>
+                                </svg>
+                                Añadir opción
+                            </button>
+                        </div>
+
+                        <!-- === Selección Múltiple === -->
+                        <div class="type-section" id="sectionSM">
+                            <div class="type-section-header">
+                                <span class="type-indicator indicator-multiple"></span>
+                                <h3>Opciones de respuesta</h3>
+                            </div>
+                            <div class="form-hint" style="margin-bottom:0.75rem;">Marca todas las opciones que sean correctas.</div>
+                            <div class="options-list" id="optionsListSM">
+                                <div class="option-correct-label" style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.25rem;padding-left:32px;">
+                                    <span style="width:44px;text-align:center;font-size:0.72rem;font-weight:700;color:var(--text-muted);">Correctas</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-add-option" onclick="addOption('SM')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="8" x2="12" y2="16"/>
+                                    <line x1="8" y1="12" x2="16" y2="12"/>
+                                </svg>
+                                Añadir opción
+                            </button>
+                        </div>
+
+                        <div class="form-submit-wrap">
+                            <a th:href="@{/pregunta/menu}" class="btn-form-cancel">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn-form-submit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Crear Pregunta
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+const tipoSelect = document.getElementById('tipoPregunta');
+const sectionVF = document.getElementById('sectionVF');
+const sectionSU = document.getElementById('sectionSU');
+const sectionSM = document.getElementById('sectionSM');
+
+var suCounter = 0;
+var smCounter = 0;
+
+function showSection(type) {
+    sectionVF.classList.toggle('active', type === 'VERDADERO_FALSO');
+    sectionSU.classList.toggle('active', type === 'SELECCION_UNICA');
+    sectionSM.classList.toggle('active', type === 'SELECCION_MULTIPLE');
+}
+
+tipoSelect.addEventListener('change', function() {
+    var type = this.value;
+    showSection(type);
+    if (type === 'SELECCION_UNICA' && suCounter === 0) {
+        addOption('SU');
+        addOption('SU');
+    }
+    if (type === 'SELECCION_MULTIPLE' && smCounter === 0) {
+        addOption('SM');
+        addOption('SM');
+    }
+});
+
+function addOption(section) {
+    var counter, listId, radioName, checkboxName;
+    if (section === 'SU') {
+        counter = suCounter;
+        listId = 'optionsListSU';
+        radioName = 'opcionCorrecta';
+        checkboxName = null;
+        suCounter++;
+    } else {
+        counter = smCounter;
+        listId = 'optionsListSM';
+        radioName = null;
+        checkboxName = 'opcionesCorrectas';
+        smCounter++;
+    }
+
+    var list = document.getElementById(listId);
+    var row = document.createElement('div');
+    row.className = 'option-row';
+
+    var numSpan = document.createElement('span');
+    numSpan.className = 'option-number';
+    numSpan.textContent = String.fromCharCode(65 + counter);
+
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'form-input';
+    input.name = 'opcion_' + counter;
+    input.placeholder = 'Opción ' + String.fromCharCode(65 + counter);
+    input.required = true;
+
+    var iconWrap = document.createElement('div');
+
+    if (radioName) {
+        iconWrap.className = 'option-radio-wrap';
+        var radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = radioName;
+        radio.value = String(counter);
+        radio.id = 'radio_' + counter;
+        if (counter === 0) radio.required = true;
+
+        var mark = document.createElement('label');
+        mark.className = 'option-mark';
+        mark.setAttribute('for', 'radio_' + counter);
+        mark.title = 'Marcar como respuesta correcta';
+
+        iconWrap.appendChild(radio);
+        iconWrap.appendChild(mark);
+    } else {
+        iconWrap.className = 'option-checkbox-wrap';
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.name = checkboxName;
+        cb.value = String(counter);
+        cb.id = 'cb_' + counter;
+
+        var check = document.createElement('label');
+        check.className = 'option-check';
+        check.setAttribute('for', 'cb_' + counter);
+        check.title = 'Marcar como respuesta correcta';
+
+        iconWrap.appendChild(cb);
+        iconWrap.appendChild(check);
+    }
+
+    var removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn-remove-option';
+    removeBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+    removeBtn.title = 'Eliminar opción';
+    removeBtn.onclick = function() {
+        row.remove();
+        renumberOptions(section);
+    };
+
+    row.appendChild(numSpan);
+    row.appendChild(input);
+    row.appendChild(iconWrap);
+    row.appendChild(removeBtn);
+    list.appendChild(row);
+}
+
+function removeAllOptions(section) {
+    var listId = section === 'SU' ? 'optionsListSU' : 'optionsListSM';
+    var list = document.getElementById(listId);
+    var rows = list.querySelectorAll('.option-row');
+    rows.forEach(function(row) { row.remove(); });
+    if (section === 'SU') suCounter = 0;
+    else smCounter = 0;
+}
+
+function renumberOptions(section) {
+    var listId = section === 'SU' ? 'optionsListSU' : 'optionsListSM';
+    var list = document.getElementById(listId);
+    var rows = list.querySelectorAll('.option-row');
+    var count = 0;
+    rows.forEach(function(row) {
+        var numSpan = row.querySelector('.option-number');
+        numSpan.textContent = String.fromCharCode(65 + count);
+
+        var textInput = row.querySelector('input[type="text"]');
+        textInput.name = 'opcion_' + count;
+        textInput.placeholder = 'Opción ' + String.fromCharCode(65 + count);
+
+        var radioOrCb = row.querySelector('input[type="radio"], input[type="checkbox"]');
+        radioOrCb.value = String(count);
+        radioOrCb.id = (radioOrCb.type === 'radio' ? 'radio_' : 'cb_') + count;
+
+        var label = row.querySelector('label');
+        label.setAttribute('for', radioOrCb.id);
+
+        count++;
+    });
+    if (section === 'SU') suCounter = count;
+    else smCounter = count;
+}
+
+document.getElementById('formCrearPregunta').addEventListener('submit', function(e) {
+    var tipo = tipoSelect.value;
+    if (!tipo) {
+        e.preventDefault();
+        alert('Selecciona un tipo de pregunta.');
+        return;
+    }
+    if (tipo === 'SELECCION_UNICA') {
+        var selected = document.querySelector('input[name="opcionCorrecta"]:checked');
+        if (!selected) {
+            e.preventDefault();
+            alert('Selecciona la respuesta correcta para las opciones de selección única.');
+            return;
+        }
+    }
+    if (tipo === 'SELECCION_MULTIPLE') {
+        var selected = document.querySelectorAll('input[name="opcionesCorrectas"]:checked');
+        if (selected.length === 0) {
+            e.preventDefault();
+            alert('Selecciona al menos una respuesta correcta para las opciones de selección múltiple.');
+            return;
+        }
+    }
+    if (tipo === 'VERDADERO_FALSO') {
+        var vfSelected = document.querySelector('input[name="respuestaCorrecta"]:checked');
+        if (!vfSelected) {
+            e.preventDefault();
+            alert('Selecciona si la respuesta es Verdadero o Falso.');
+            return;
+        }
+    }
+});
+
+/*]]>*/
+</script>
+
+</body>
+</html>

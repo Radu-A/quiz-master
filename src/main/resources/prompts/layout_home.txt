@@ -1,0 +1,21 @@
+Actúa como un experto en desarrollo frontend con Spring Boot y Thymeleaf. Necesito que crees el código para la página de inicio (Home/Dashboard) de mi aplicación web. 
+
+Contexto:
+La aplicación consiste en un quiz que tendrá tres tipos de preguntas: verdadero/falso, selección única, selección múltiple.
+
+Requisitos técnicos para el código:
+1. Plantillas: Utiliza Thymeleaf.
+2. Estilos: Utiliza Bootstrap 5 configurado para cargarse de forma LOCAL desde la carpeta 'src/main/resources/static/'. El diseño debe ser moderno, limpio, profesional ("increíble"), con una paleta de colores atractiva (por ejemplo, tonos oscuros/azules profesionales o modo claro minimalista con contrastes nítidos), componentes con bordes ligeramente redondeados (shadows sutiles) y una experiencia de usuario impecable.
+3. Layout: utiliza th:replace para generar un layout con header, main, footer.
+
+Layout
+- El <head> con la referencia local a Bootstrap CSS y los estilos personalizados necesarios.
+- Una barra de navegación (Navbar) superior moderna y responsiva con un menú desplegable que sirva como eje de navegabilidad para toda la aplicación (verdadero/falso, selección única, selección múltiple).
+- Un footer limpio.
+- El uso de 'th:fragment' y 'th:replace' / 'th:insert' de manera correcta para que sea reutilizable.
+
+Home (index.html)
+Debe ser un "Dashboard" o panel de bienvenida espectacular que incluya:
+- Un Jumbotron o sección de bienvenida llamativa con un gradiente sutil, con el mensaje "Potencia tu aprendizaje. Pon a prueba tus conocimientos con desafíos interactivos diseñados a tu medida".
+- Tarjetas de acceso rápido (Cards) con efectos hover para las secciones principales: verdadero/falso, selección única, selección múltiple.
+- Un diseño completamente responsivo.
