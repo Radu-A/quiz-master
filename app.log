@@ -1,0 +1,617 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com.github.Radu-A:evaluacion-final >-----------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.0.6:run (default-cli) > test-compile @ evaluacion-final >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ evaluacion-final ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 10 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ evaluacion-final ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ evaluacion-final ---
+[INFO] skip non existing resourceDirectory /home/tarde/ejercicio-evaluacion-final/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ evaluacion-final ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] <<< spring-boot:4.0.6:run (default-cli) < test-compile @ evaluacion-final <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.6:run (default-cli) @ evaluacion-final ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.6)
+
+2026-05-22T12:40:03.841+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] c.g.R.e.EvaluacionFinalApplication       : Starting EvaluacionFinalApplication using Java 17.0.18 with PID 21634 (/home/tarde/ejercicio-evaluacion-final/target/classes started by tarde in /home/tarde/ejercicio-evaluacion-final)
+2026-05-22T12:40:03.845+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] c.g.R.e.EvaluacionFinalApplication       : No active profile set, falling back to 1 default profile: "default"
+2026-05-22T12:40:03.901+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-22T12:40:03.901+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-22T12:40:04.465+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-22T12:40:04.522+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 49 ms. Found 5 JPA repository interfaces.
+2026-05-22T12:40:04.983+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-22T12:40:04.994+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-22T12:40:04.995+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]
+2026-05-22T12:40:05.025+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1122 ms
+2026-05-22T12:40:05.172+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-22T12:40:05.211+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-22T12:40:05.605+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-22T12:40:05.633+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-22T12:40:05.798+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:evaluaciondb user=SA
+2026-05-22T12:40:05.800+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-22T12:40:05.820+02:00  WARN 21634 --- [evaluacion-final] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-22T12:40:05.838+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:evaluaciondb]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: EVALUACIONDB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-22T12:40:06.730+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    drop table if exists opciones_seleccion_multiple cascade 
+Hibernate: 
+    drop table if exists opciones_seleccion_unica cascade 
+Hibernate: 
+    drop table if exists preguntas cascade 
+Hibernate: 
+    drop table if exists respuestas_correctas_multiple cascade 
+Hibernate: 
+    drop table if exists tematicas cascade 
+Hibernate: 
+    create table opciones_seleccion_multiple (
+        pregunta_id bigint not null,
+        opcion varchar(255)
+    )
+Hibernate: 
+    create table opciones_seleccion_unica (
+        pregunta_id bigint not null,
+        opcion varchar(255)
+    )
+Hibernate: 
+    create table preguntas (
+        respuesta_correcta boolean,
+        id bigint generated by default as identity,
+        tematica_id bigint not null,
+        tipo_pregunta varchar(31) not null check ((tipo_pregunta in ('SELECCION_MULTIPLE','SELECCION_UNICA','VERDADERO_FALSO'))),
+        enunciado varchar(255) not null,
+        opcion_correcta varchar(255),
+        primary key (id),
+        check (tipo_pregunta <> 'VERDADERO_FALSO' or (respuesta_correcta is not null))
+    )
+Hibernate: 
+    create table respuestas_correctas_multiple (
+        pregunta_id bigint not null,
+        respuesta_correcta varchar(255)
+    )
+Hibernate: 
+    create table tematicas (
+        id bigint generated by default as identity,
+        nombre varchar(255) not null unique,
+        primary key (id)
+    )
+Hibernate: 
+    alter table if exists opciones_seleccion_multiple 
+       add constraint FK8dhdn7awjctllcot8kdcjcn2y 
+       foreign key (pregunta_id) 
+       references preguntas
+Hibernate: 
+    alter table if exists opciones_seleccion_unica 
+       add constraint FKrxmptnjnietkwhffl69lc84x9 
+       foreign key (pregunta_id) 
+       references preguntas
+Hibernate: 
+    alter table if exists preguntas 
+       add constraint FKkwwl0vnexwoaopj9yb6y70niq 
+       foreign key (tematica_id) 
+       references tematicas
+Hibernate: 
+    alter table if exists respuestas_correctas_multiple 
+       add constraint FKoswyp7uucitrnn1gjmt8i13h5 
+       foreign key (pregunta_id) 
+       references preguntas
+Hibernate: INSERT INTO tematicas (id, nombre) VALUES (1, 'Historia')
+Hibernate: INSERT INTO tematicas (id, nombre) VALUES (2, 'Ciencia')
+Hibernate: INSERT INTO tematicas (id, nombre) VALUES (3, 'Geografía')
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta, respuesta_correcta) VALUES (1, 'La Revolución Francesa comenzó en 1789.', 1, 'VERDADERO_FALSO', TRUE)
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta, respuesta_correcta) VALUES (2, 'El Imperio Romano de Occidente cayó en el año 476 d.C.', 1, 'VERDADERO_FALSO', TRUE)
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta, respuesta_correcta) VALUES (3, 'El agua hierve a 100 grados Celsius a nivel del mar.', 2, 'VERDADERO_FALSO', TRUE)
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta, respuesta_correcta) VALUES (4, 'El Sol es una estrella.', 2, 'VERDADERO_FALSO', TRUE)
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta, respuesta_correcta) VALUES (5, 'El Amazonas es el río más largo del mundo.', 3, 'VERDADERO_FALSO', FALSE)
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta, opcion_correcta) VALUES (6, '¿Quién fue el primer presidente de los Estados Unidos?', 1, 'SELECCION_UNICA', 'George Washington')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (6, 'George Washington')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (6, 'Thomas Jefferson')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (6, 'Abraham Lincoln')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (6, 'John Adams')
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta, opcion_correcta) VALUES (7, '¿En qué año terminó la Segunda Guerra Mundial?', 1, 'SELECCION_UNICA', '1945')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (7, '1943')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (7, '1944')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (7, '1945')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (7, '1946')
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta, opcion_correcta) VALUES (8, '¿Cuál es el elemento químico con símbolo O?', 2, 'SELECCION_UNICA', 'Oxígeno')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (8, 'Oro')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (8, 'Oxígeno')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (8, 'Osmio')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (8, 'Óxido')
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta, opcion_correcta) VALUES (9, '¿Cuál es la capital de Australia?', 3, 'SELECCION_UNICA', 'Canberra')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (9, 'Sídney')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (9, 'Melbourne')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (9, 'Canberra')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (9, 'Brisbane')
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta, opcion_correcta) VALUES (10, '¿Cuál es el país más grande del mundo por superficie?', 3, 'SELECCION_UNICA', 'Rusia')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (10, 'China')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (10, 'Estados Unidos')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (10, 'Rusia')
+Hibernate: INSERT INTO opciones_seleccion_unica (pregunta_id, opcion) VALUES (10, 'Canadá')
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta) VALUES (11, '¿Cuáles de las siguientes civilizaciones fueron mesoamericanas?', 1, 'SELECCION_MULTIPLE')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (11, 'Maya')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (11, 'Azteca')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (11, 'Inca')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (11, 'Egipcia')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (11, 'Griega')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (11, 'Maya')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (11, 'Azteca')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (11, 'Inca')
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta) VALUES (12, '¿Cuáles de los siguientes son planetas del Sistema Solar?', 2, 'SELECCION_MULTIPLE')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (12, 'Tierra')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (12, 'Marte')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (12, 'Plutón')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (12, 'Luna')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (12, 'Venus')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (12, 'Tierra')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (12, 'Marte')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (12, 'Venus')
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta) VALUES (13, '¿Cuáles de los siguientes son estados de la materia?', 2, 'SELECCION_MULTIPLE')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (13, 'Sólido')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (13, 'Líquido')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (13, 'Gaseoso')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (13, 'Energía')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (13, 'Plasma')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (13, 'Sólido')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (13, 'Líquido')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (13, 'Gaseoso')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (13, 'Plasma')
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta) VALUES (14, '¿Cuáles de los siguientes países tienen costa en el Mar Mediterráneo?', 3, 'SELECCION_MULTIPLE')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (14, 'España')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (14, 'Italia')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (14, 'Alemania')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (14, 'Grecia')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (14, 'Suiza')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (14, 'España')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (14, 'Italia')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (14, 'Grecia')
+Hibernate: INSERT INTO preguntas (id, enunciado, tematica_id, tipo_pregunta) VALUES (15, '¿Cuáles de los siguientes son continentes?', 3, 'SELECCION_MULTIPLE')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (15, 'África')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (15, 'Europa')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (15, 'Rusia')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (15, 'Oceanía')
+Hibernate: INSERT INTO opciones_seleccion_multiple (pregunta_id, opcion) VALUES (15, 'Medio Oriente')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (15, 'África')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (15, 'Europa')
+Hibernate: INSERT INTO respuestas_correctas_multiple (pregunta_id, respuesta_correcta) VALUES (15, 'Oceanía')
+Hibernate: ALTER TABLE tematicas ALTER COLUMN id RESTART WITH 4
+Hibernate: ALTER TABLE preguntas ALTER COLUMN id RESTART WITH 16
+2026-05-22T12:40:06.824+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-22T12:40:06.902+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-22T12:40:07.056+02:00  WARN 21634 --- [evaluacion-final] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-22T12:40:07.075+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page template: index
+2026-05-22T12:40:07.359+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] o.s.b.h.a.H2ConsoleAutoConfiguration     : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:evaluaciondb'
+2026-05-22T12:40:07.414+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-05-22T12:40:07.421+02:00  INFO 21634 --- [evaluacion-final] [  restartedMain] c.g.R.e.EvaluacionFinalApplication       : Started EvaluacionFinalApplication in 3.947 seconds (process running for 4.301)
+2026-05-22T12:40:35.979+02:00  INFO 21634 --- [evaluacion-final] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-22T12:40:35.979+02:00  INFO 21634 --- [evaluacion-final] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-22T12:40:35.982+02:00  INFO 21634 --- [evaluacion-final] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.tipo_pregunta,
+        p1_0.enunciado,
+        p1_0.tematica_id,
+        p1_0.opcion_correcta,
+        p1_0.respuesta_correcta 
+    from
+        preguntas p1_0 
+    where
+        1=1 
+    order by
+        p1_0.id 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        count(p1_0.id) 
+    from
+        preguntas p1_0 
+    where
+        1=1
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.nombre 
+    from
+        tematicas t1_0
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.tipo_pregunta,
+        p1_0.enunciado,
+        p1_0.tematica_id,
+        p1_0.opcion_correcta,
+        p1_0.respuesta_correcta 
+    from
+        preguntas p1_0 
+    where
+        1=1 
+    order by
+        p1_0.id 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        count(p1_0.id) 
+    from
+        preguntas p1_0 
+    where
+        1=1
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.nombre 
+    from
+        tematicas t1_0
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.tipo_pregunta,
+        p1_0.enunciado,
+        p1_0.tematica_id,
+        p1_0.opcion_correcta,
+        p1_0.respuesta_correcta 
+    from
+        preguntas p1_0 
+    where
+        1=1 
+    order by
+        p1_0.id 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.nombre 
+    from
+        tematicas t1_0
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_multiple o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        oc1_0.pregunta_id,
+        oc1_0.respuesta_correcta 
+    from
+        respuestas_correctas_multiple oc1_0 
+    where
+        oc1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_multiple o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        oc1_0.pregunta_id,
+        oc1_0.respuesta_correcta 
+    from
+        respuestas_correctas_multiple oc1_0 
+    where
+        oc1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_multiple o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        oc1_0.pregunta_id,
+        oc1_0.respuesta_correcta 
+    from
+        respuestas_correctas_multiple oc1_0 
+    where
+        oc1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_multiple o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        oc1_0.pregunta_id,
+        oc1_0.respuesta_correcta 
+    from
+        respuestas_correctas_multiple oc1_0 
+    where
+        oc1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_multiple o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        oc1_0.pregunta_id,
+        oc1_0.respuesta_correcta 
+    from
+        respuestas_correctas_multiple oc1_0 
+    where
+        oc1_0.pregunta_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.tipo_pregunta,
+        p1_0.enunciado,
+        p1_0.tematica_id,
+        p1_0.opcion_correcta,
+        p1_0.respuesta_correcta 
+    from
+        preguntas p1_0 
+    where
+        1=1 
+    order by
+        p1_0.id 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        count(p1_0.id) 
+    from
+        preguntas p1_0 
+    where
+        1=1
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.nombre 
+    from
+        tematicas t1_0
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.tipo_pregunta,
+        p1_0.enunciado,
+        p1_0.tematica_id,
+        p1_0.opcion_correcta,
+        p1_0.respuesta_correcta 
+    from
+        preguntas p1_0 
+    where
+        1=1 
+        and p1_0.tematica_id=? 
+    order by
+        p1_0.id 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.nombre 
+    from
+        tematicas t1_0
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_multiple o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        oc1_0.pregunta_id,
+        oc1_0.respuesta_correcta 
+    from
+        respuestas_correctas_multiple oc1_0 
+    where
+        oc1_0.pregunta_id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.tipo_pregunta,
+        p1_0.enunciado,
+        p1_0.tematica_id,
+        p1_0.opcion_correcta,
+        p1_0.respuesta_correcta 
+    from
+        preguntas p1_0 
+    where
+        1=1 
+    order by
+        p1_0.id 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        count(p1_0.id) 
+    from
+        preguntas p1_0 
+    where
+        1=1
+Hibernate: 
+    select
+        t1_0.id,
+        t1_0.nombre 
+    from
+        tematicas t1_0
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?
+Hibernate: 
+    select
+        o1_0.pregunta_id,
+        o1_0.opcion 
+    from
+        opciones_seleccion_unica o1_0 
+    where
+        o1_0.pregunta_id=?

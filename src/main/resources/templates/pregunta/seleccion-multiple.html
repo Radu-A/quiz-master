@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>Selección Múltiple &mdash; QuizMaster</title>
+</head>
+<body>
+
+<section>
+    <div class="quiz-hero quiz-hero-sm">
+        <div class="container text-center">
+            <span class="badge-pill">Quiz Interactivo</span>
+            <h1>Selección <span class="highlight">Múltiple</span></h1>
+            <p>Marca todas las opciones que consideres correctas para cada pregunta.</p>
+            <div class="quiz-meta" th:if="${!enviado}">
+                <span class="quiz-meta-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span th:text="${total} + ' preguntas'">5 preguntas</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="quiz-section">
+        <div class="container">
+            <form method="post" th:action="@{/pregunta/seleccion-multiple}" th:if="${!enviado}">
+                <div th:each="pregunta, iterStat : ${preguntas}" class="quiz-card quiz-card-sm">
+                    <div class="quiz-card-header">
+                        <span class="quiz-card-number" th:text="'Pregunta ' + (${iterStat.index} + 1) + ' de ' + ${total}">Pregunta 1 de 5</span>
+                        <span class="quiz-card-theme" th:text="${pregunta.tematica.nombre}">Historia</span>
+                        <span class="quiz-card-hint">Selecciona todas las correctas</span>
+                    </div>
+                    <p class="quiz-card-question" th:text="${pregunta.enunciado}">Enunciado aquí</p>
+                    <div class="quiz-options">
+                        <label th:each="opcion : ${pregunta.opciones}" class="quiz-option quiz-option-check">
+                            <input type="checkbox" th:name="'r_' + ${pregunta.id}" th:value="${opcion}">
+                            <span class="quiz-option-marker quiz-option-marker-sm" th:text="${#strings.substring(opcion, 0, 1)}">A</span>
+                            <span class="quiz-option-text" th:text="${opcion}">Opción</span>
+                            <span class="quiz-option-checkbox"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="quiz-submit-wrap">
+                    <button type="submit" class="btn-quiz-submit btn-quiz-submit-sm">
+                        Enviar respuestas
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            <div th:if="${enviado}" class="quiz-results-wrap">
+                <div class="quiz-score-card">
+                     <div class="quiz-score-ring" th:classappend="${puntuacion == total ? 'ring-perfect' : (puntuacion >= total/2.0 ? 'ring-good' : 'ring-low')}">
+                        <span class="quiz-score-number" th:text="${puntuacion} + '/' + ${total}">3/5</span>
+                    </div>
+                    <p class="quiz-score-label">
+                        <th:block th:if="${puntuacion == total}">¡Perfecto! Has acertado todas.</th:block>
+                        <th:block th:if="${puntuacion >= total/2.0 && puntuacion < total}">¡Buen trabajo! Sigue practicando.</th:block>
+                        <th:block th:if="${puntuacion < total/2.0}">Sigue intentándolo, ¡tú puedes!</th:block>
+                    </p>
+                </div>
+
+                <div th:each="pregunta, iterStat : ${preguntas}" class="quiz-card quiz-card-sm"
+                     th:classappend="${resultados[pregunta.id] ? 'quiz-card-correct' : 'quiz-card-incorrect'}">
+                    <div class="quiz-card-header">
+                        <span class="quiz-card-number" th:text="'Pregunta ' + (${iterStat.index} + 1) + ' de ' + ${total}">Pregunta 1</span>
+                        <span class="quiz-card-theme" th:text="${pregunta.tematica.nombre}">Historia</span>
+                        <span class="quiz-result-icon" th:utext="${resultados[pregunta.id] ? '&#10003;' : '&#10007;'}">✓</span>
+                    </div>
+                    <p class="quiz-card-question" th:text="${pregunta.enunciado}">Enunciado aquí</p>
+                    <div class="quiz-options readonly">
+                        <div th:each="opcion : ${pregunta.opciones}" class="quiz-option"
+                             th:classappend="${pregunta.opcionesCorrectas.contains(opcion) ? 'quiz-option-correct' : (respuestasUsuario[pregunta.id] != null && respuestasUsuario[pregunta.id].contains(opcion) && !pregunta.opcionesCorrectas.contains(opcion) ? 'quiz-option-incorrect' : '')}">
+                            <span class="quiz-option-marker quiz-option-marker-sm" th:text="${#strings.substring(opcion, 0, 1)}">A</span>
+                            <span class="quiz-option-text" th:text="${opcion}">Opción</span>
+                            <span class="quiz-option-badge" th:if="${pregunta.opcionesCorrectas.contains(opcion)}">Correcta</span>
+                            <span class="quiz-option-badge badge-wrong" th:if="${respuestasUsuario[pregunta.id] != null && respuestasUsuario[pregunta.id].contains(opcion) && !pregunta.opcionesCorrectas.contains(opcion)}">Incorrecta</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-submit-wrap">
+                    <a th:href="@{/pregunta/seleccion-multiple}" class="btn-quiz-submit btn-quiz-submit-sm">
+                        Volver a intentarlo
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>
