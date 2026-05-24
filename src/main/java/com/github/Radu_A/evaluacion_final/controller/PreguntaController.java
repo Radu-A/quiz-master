@@ -160,13 +160,13 @@ public class PreguntaController {
         model.addAttribute("enviado", true);
         model.addAttribute("tematicaId", tematicaId);
         return "pregunta/quiz";
-    }@GetMapping("/crear")
+    }@GetMapping("/formulario-pregunta")
     public String crearForm(Model model) {
         model.addAttribute("tematicas", preguntaService.obtenerTematicas());
-        return "pregunta/crear";
+        return "pregunta/formulario-pregunta";
     }
 
-    @PostMapping("/crear")
+    @PostMapping("/formulario-pregunta")
     public String crear(HttpServletRequest request, RedirectAttributes redirectAttributes) {
         var paramMap = request.getParameterMap();
         String tipo = getParam(paramMap, "tipoPregunta");
@@ -175,7 +175,7 @@ public class PreguntaController {
         if (tematicaIdStr == null || tematicaIdStr.isBlank()) {
             redirectAttributes.addFlashAttribute("mensaje", "Debes seleccionar una temática.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
-            return "redirect:/pregunta/crear";
+            return "redirect:/pregunta/formulario-pregunta";
         }
         Long tematicaId = Long.parseLong(tematicaIdStr);
         Tematica tematica = tematicaRepository.findById(tematicaId).orElseThrow();
