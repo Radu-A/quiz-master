@@ -144,6 +144,16 @@ body {
   border-color: var(--border);
 }
 
+.dropdown-item-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--item-color, var(--text-secondary));
+}
+
+.dropdown-item:hover .dropdown-item-icon {
+  color: var(--item-color, var(--accent-blue));
+}
+
 /* ── Main ── */
 main {
   flex: 1;
@@ -401,6 +411,36 @@ main {
   box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);
 }
 
+/* ── Card Desafío Total ── */
+.card-quiz.card-desafio::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); }
+.card-quiz.card-desafio .card-icon { background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1)); color: var(--accent-purple); }
+.card-quiz.card-desafio .btn-card {
+  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08));
+  color: var(--accent-purple);
+  border-color: rgba(139,92,246,0.2);
+}
+.card-quiz.card-desafio .btn-card:hover {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+/* ── Card Temática (color dinámico) ── */
+.card-quiz.card-tematica::before { background: var(--tematica-color, var(--accent-purple)); }
+.card-quiz.card-tematica .card-icon { background: color-mix(in srgb, var(--tematica-color, var(--accent-purple)) 10%, transparent); color: var(--tematica-color, var(--accent-purple)); }
+.card-quiz.card-tematica .btn-card {
+  background: color-mix(in srgb, var(--tematica-color, var(--accent-purple)) 8%, transparent);
+  color: var(--tematica-color, var(--accent-purple));
+  border-color: color-mix(in srgb, var(--tematica-color, var(--accent-purple)) 20%, transparent);
+}
+.card-quiz.card-tematica .btn-card:hover {
+  background: var(--tematica-color, var(--accent-purple));
+  color: #fff;
+  border-color: var(--tematica-color, var(--accent-purple));
+  box-shadow: 0 4px 15px color-mix(in srgb, var(--tematica-color, var(--accent-purple)) 30%, transparent);
+}
+
 /* ── Stats Strip ── */
 .stats-strip {
   background: var(--surface);
@@ -468,6 +508,20 @@ main {
 
 .quiz-hero-sm {
   background: linear-gradient(160deg, var(--primary-deep) 0%, #2d1b2e 50%, #4a1d3a 100%);
+}
+
+.quiz-hero-desafio {
+  background: linear-gradient(160deg, var(--primary-deep) 0%, #1e1b4b 50%, #312e81 100%);
+}
+
+.quiz-hero-tematica {
+  background: linear-gradient(160deg, var(--primary-deep) 0%, color-mix(in srgb, var(--quiz-color, #8b5cf6) 20%, var(--primary-deep)) 50%, color-mix(in srgb, var(--quiz-color, #8b5cf6) 35%, var(--primary-deep)) 100%);
+}
+
+.quiz-hero-icon {
+  display: inline-flex;
+  vertical-align: -2px;
+  margin-right: 0.5rem;
 }
 
 .quiz-hero .badge-pill {
@@ -1971,4 +2025,14 @@ input:checked + .option-check::after {
     font-size: 0.675rem;
     padding: 0.1rem 0.45rem;
   }
+}
+
+/* ── Dropdown header for tematica ── */
+.dropdown-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: 0.5rem 1rem 0.2rem;
 }

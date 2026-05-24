@@ -20,6 +20,12 @@ public class Tematica {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
+    @Column(nullable = false)
+    private String color;
+
+    @Column(nullable = false)
+    private String icono;
+
     // Relación bidireccional (opcional, pero útil para listar preguntas desde una temática)
     @OneToMany(mappedBy = "tematica", cascade = CascadeType.ALL)
     private List<Pregunta> preguntas;

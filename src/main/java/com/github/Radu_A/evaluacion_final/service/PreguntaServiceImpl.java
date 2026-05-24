@@ -13,8 +13,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.github.Radu_A.evaluacion_final.dto.ResultadoEvaluacion;
+import com.github.Radu_A.evaluacion_final.dto.ResultadoQuiz;
 import com.github.Radu_A.evaluacion_final.entity.Pregunta;
-import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionMúltiple;
+import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionMultiple;
 import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionUnica;
 import com.github.Radu_A.evaluacion_final.entity.PreguntaVerdaderoFalso;
 import com.github.Radu_A.evaluacion_final.entity.Tematica;
@@ -54,7 +55,7 @@ public class PreguntaServiceImpl implements IPreguntaService {
             Class<? extends Pregunta> tipoClass = switch (tipoPregunta) {
                 case "VERDADERO_FALSO" -> PreguntaVerdaderoFalso.class;
                 case "SELECCION_UNICA" -> PreguntaSeleccionUnica.class;
-                case "SELECCION_MULTIPLE" -> PreguntaSeleccionMúltiple.class;
+                case "SELECCION_MULTIPLE" -> PreguntaSeleccionMultiple.class;
                 default -> null;
             };
             if (tipoClass != null) {
@@ -71,8 +72,21 @@ public class PreguntaServiceImpl implements IPreguntaService {
     }
 
     @Override
+    public List<Pregunta> obtenerPreguntasByTematica(Long tematicaId) {
+        if (tematicaId != null) {
+            return preguntaRepo.findByTematicaId(tematicaId);
+        }
+        return preguntaRepo.findAll();
+    }
+
+    @Override
     public List<PreguntaVerdaderoFalso> obtenerPreguntasVF() {
         return vfRepo.findAll();
+    }
+
+    @Override
+    public List<PreguntaVerdaderoFalso> obtenerPreguntasVFByTematica(Long tematicaId) {
+        return vfRepo.findByTematicaId(tematicaId);
     }
 
     @Override
@@ -81,8 +95,18 @@ public class PreguntaServiceImpl implements IPreguntaService {
     }
 
     @Override
-    public List<PreguntaSeleccionMúltiple> obtenerPreguntasSM() {
+    public List<PreguntaSeleccionUnica> obtenerPreguntasSUByTematica(Long tematicaId) {
+        return suRepo.findByTematicaId(tematicaId);
+    }
+
+    @Override
+    public List<PreguntaSeleccionMultiple> obtenerPreguntasSM() {
         return smRepo.findAll();
+    }
+
+    @Override
+    public List<PreguntaSeleccionMultiple> obtenerPreguntasSMByTematica(Long tematicaId) {
+        return smRepo.findByTematicaId(tematicaId);
     }
 
     @Override
@@ -133,12 +157,12 @@ public class PreguntaServiceImpl implements IPreguntaService {
 
     @Override
     public ResultadoEvaluacion<List<String>> evaluarSM(Map<String, String[]> parametros) {
-        List<PreguntaSeleccionMúltiple> preguntas = smRepo.findAll();
+        List<PreguntaSeleccionMultiple> preguntas = smRepo.findAll();
         int puntuacion = 0;
         Map<Long, Boolean> resultados = new HashMap<>();
         Map<Long, List<String>> respuestasUsuario = new HashMap<>();
 
-        for (PreguntaSeleccionMúltiple p : preguntas) {
+        for (PreguntaSeleccionMultiple p : preguntas) {
             String key = "r_" + p.getId();
             String[] valores = parametros.get(key);
             List<String> seleccionadas = (valores != null) ? Arrays.asList(valores) : new ArrayList<>();
@@ -160,5 +184,42 @@ public class PreguntaServiceImpl implements IPreguntaService {
     @Override
     public Pregunta guardar(Pregunta pregunta) {
         return preguntaRepo.save(pregunta);
+    }
+
+    @Override
+    public ResultadoQuiz evaluarQuiz(List<Pregunta> preguntas, Map<String, String[]> allParams) {
+        int puntuacion = 0;
+        Map<Long, Boolean> resultados = new HashMap<>();
+
+        for (Pregunta p : preguntas) {
+            String key = "r_" + p.getId();
+            boolean correcta = false;
+
+            if (p instanceof PreguntaVerdaderoFalso vf) {
+                if (allParams.containsKey(key)) {
+                    boolean resp = Boolean.parseBoolean(allParams.get(key)[0]);
+                    correcta = vf.isRespuestaCorrecta() == resp;
+                }
+            } else if (p instanceof PreguntaSeleccionUnica su) {
+                if (allParams.containsKey(key)) {
+                    String resp = allParams.get(key)[0];
+                    correcta = su.getOpcionCorrecta().equals(resp);
+                }
+            } else if (p instanceof PreguntaSeleccionMultiple sm) {
+                String[] valores = allParams.get(key);
+                List<String> seleccionadas = (valores != null) ? Arrays.asList(valores) : new ArrayList<>();
+                List<String> correctas = sm.getOpcionesCorrectas();
+                if (seleccionadas.isEmpty()) {
+                    correcta = correctas == null || correctas.isEmpty();
+                } else {
+                    correcta = correctas.containsAll(seleccionadas) && seleccionadas.containsAll(correctas);
+                }
+            }
+
+            resultados.put(p.getId(), correcta);
+            if (correcta) puntuacion++;
+        }
+
+        return new ResultadoQuiz(preguntas, resultados, puntuacion, preguntas.size());
     }
 }

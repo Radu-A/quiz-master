@@ -11,7 +11,8 @@
         <div class="container text-center">
             <span class="badge-pill">Quiz Interactivo</span>
             <h1>Selección <span class="highlight">Única</span></h1>
-            <p>Elige la respuesta correcta entre las opciones disponibles para cada pregunta.</p>
+            <p th:if="${tematicaId != null}" th:with="tematica=${@preguntaServiceImpl.obtenerTematicas().?[id == tematicaId][0]}" th:text="'Temática: ' + ${tematica.nombre}">Temática</p>
+            <p th:if="${tematicaId == null}">Elige la respuesta correcta entre las opciones disponibles para cada pregunta.</p>
             <div class="quiz-meta" th:if="${!enviado}">
                 <span class="quiz-meta-item">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -25,7 +26,7 @@
 
     <div class="quiz-section">
         <div class="container">
-            <form method="post" th:action="@{/pregunta/seleccion-unica}" th:if="${!enviado}">
+            <form method="post" th:action="@{/pregunta/seleccion-unica(tematicaId=${tematicaId})}" th:if="${!enviado}">
                 <div th:each="pregunta, iterStat : ${preguntas}" class="quiz-card quiz-card-su">
                     <div class="quiz-card-header">
                         <span class="quiz-card-number" th:text="'Pregunta ' + (${iterStat.index} + 1) + ' de ' + ${total}">Pregunta 1 de 5</span>
@@ -82,7 +83,7 @@
                 </div>
 
                 <div class="quiz-submit-wrap">
-                    <a th:href="@{/pregunta/seleccion-unica}" class="btn-quiz-submit btn-quiz-submit-su">
+                    <a th:href="@{/pregunta/seleccion-unica(tematicaId=${tematicaId})}" class="btn-quiz-submit btn-quiz-submit-su">
                         Volver a intentarlo
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>

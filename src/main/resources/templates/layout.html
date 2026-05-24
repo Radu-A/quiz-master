@@ -35,23 +35,17 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quizDropdown">
                             <li>
-                                <a class="dropdown-item" th:href="@{/pregunta/verdadero-falso}">
-                                    <span style="color: var(--accent-blue); font-weight: 700;">&#10003;</span>
-                                    Verdadero / Falso
+                                <a class="dropdown-item" th:href="@{/pregunta/quiz}">
+                                    <span style="color: var(--accent-blue); font-weight: 700;">&#9733;</span>
+                                    Desafío Total
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" th:href="@{/pregunta/seleccion-unica}">
-                                    <span style="color: var(--accent-purple); font-weight: 700;">&#9679;</span>
-                                    Selección Única
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" th:href="@{/pregunta/seleccion-multiple}">
-                                    <span style="color: var(--accent-rose); font-weight: 700;">&#9632;</span>
-                                    Selección Múltiple
+                            <li th:each="t : ${tematicas}">
+                                <a class="dropdown-item" th:href="@{/pregunta/quiz(tematicaId=${t.id})}"
+                                   th:style="'--item-color:' + ${t.color}">
+                                    <span class="dropdown-item-icon" th:replace="~{fragments/icon :: icon(${t.icono}, 18)}"></span>
+                                    <span th:text="${t.nombre}">Temática</span>
                                 </a>
                             </li>
                         </ul>
@@ -82,9 +76,7 @@
                 <span>&copy; 2026 <strong style="color: rgba(255,255,255,0.85);">QuizMaster</strong>. Todos los derechos reservados.</span>
                 <div class="d-flex gap-3">
                     <a th:href="@{/}">Inicio</a>
-                    <a th:href="@{/pregunta/verdadero-falso}">V/F</a>
-                    <a th:href="@{/pregunta/seleccion-unica}">Opción única</a>
-                    <a th:href="@{/pregunta/seleccion-multiple}">Opción múltiple</a>
+                    <a th:href="@{/pregunta/quiz}">Desafío Total</a>
                 </div>
             </div>
         </div>

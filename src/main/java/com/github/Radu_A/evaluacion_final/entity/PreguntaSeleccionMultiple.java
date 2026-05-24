@@ -9,7 +9,7 @@ import java.util.List;
 @DiscriminatorValue("SELECCION_MULTIPLE")
 @Getter
 @Setter
-public class PreguntaSeleccionMúltiple extends Pregunta {
+public class PreguntaSeleccionMultiple extends Pregunta {
 
 	@ElementCollection
 	@CollectionTable(name = "opciones_seleccion_multiple", joinColumns = @JoinColumn(name = "pregunta_id"))

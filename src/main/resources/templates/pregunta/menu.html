@@ -109,7 +109,7 @@
                             <tr th:each="pregunta : ${preguntas.content}"
                                 th:with="isVF=${T(com.github.Radu_A.evaluacion_final.entity.PreguntaVerdaderoFalso).isInstance(pregunta)},
                                          isSU=${T(com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionUnica).isInstance(pregunta)},
-                                         isSM=${T(com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionMúltiple).isInstance(pregunta)}">
+                                         isSM=${T(com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionMultiple).isInstance(pregunta)}">
                                 <td class="cell-id" th:text="${pregunta.id}">1</td>
                                 <td class="cell-enunciado">
                                     <span class="enunciado-text" th:text="${pregunta.enunciado}">¿Enunciado de ejemplo?</span>

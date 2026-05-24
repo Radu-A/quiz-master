@@ -20,12 +20,12 @@
                     </h1>
                     <p>
                         Pon a prueba tus conocimientos con desafíos interactivos
-                        diseñados a tu medida. Elige entre tres modalidades de quiz
-                        y demuestra de lo que eres capaz.
+                        diseñados a tu medida. Elige una temática o atrévete
+                        con el reto completo.
                     </p>
                     <div class="d-flex flex-wrap gap-3">
-                        <a th:href="@{/pregunta/verdadero-falso}" class="btn btn-hero btn-hero-primary">
-                            Comenzar ahora &rarr;
+                        <a th:href="@{/pregunta/quiz}" class="btn btn-hero btn-hero-primary">
+                            Desafío Total &rarr;
                         </a>
                         <a th:href="@{#cards-section}" class="btn btn-hero btn-hero-outline">
                             Explorar quizzes
@@ -61,18 +61,18 @@
                 <div class="col-6 col-md-4 col-lg-4">
                     <div class="stat-item">
                         <div class="stat-number blue">3</div>
-                        <div class="stat-label">Tipos de Quiz</div>
+                        <div class="stat-label">Tipos de Pregunta</div>
                     </div>
                 </div>
                 <div class="col-6 col-md-4 col-lg-4">
                     <div class="stat-item">
-                        <div class="stat-number purple">3</div>
+                        <div class="stat-number purple" th:text="${#lists.size(tematicas)}">5</div>
                         <div class="stat-label">Temáticas</div>
                     </div>
                 </div>
                 <div class="col-md-4 col-lg-4 d-none d-md-block">
                     <div class="stat-item">
-                        <div class="stat-number rose">15</div>
+                        <div class="stat-number rose">75</div>
                         <div class="stat-label">Preguntas Totales</div>
                     </div>
                 </div>
@@ -80,68 +80,39 @@
         </div>
     </div>
 
-    <!-- ===== CARDS ===== -->
+    <!-- ===== QUIZZES ===== -->
     <div class="cards-section" id="cards-section">
         <div class="container">
             <div class="section-header">
                 <h2>Elige tu desafío</h2>
-                <p>Selecciona el tipo de quiz que mejor se adapte a tu estilo de aprendizaje.</p>
+                <p>Selecciona una temática o acepta el reto de combinarlas todas.</p>
             </div>
             <div class="row g-4">
-                <!-- Card: Verdadero / Falso -->
+                <!-- Desafío Total -->
                 <div class="col-md-4">
-                    <div class="card-quiz card-vf">
+                    <div class="card-quiz card-desafio">
                         <div class="card-icon">
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"/>
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                             </svg>
                         </div>
-                        <h3>Verdadero / Falso</h3>
-                        <p>
-                            Preguntas directas con dos opciones. Ideal para repasar conceptos
-                            clave de forma rápida y efectiva.
-                        </p>
-                        <a th:href="@{/pregunta/verdadero-falso}" class="btn btn-card">
+                        <h3>Desafío Total</h3>
+                        <p>Todas las temáticas y tipos de pregunta combinados. ¿Te atreves?</p>
+                        <a th:href="@{/pregunta/quiz}" class="btn btn-card">
                             Empezar quiz &rarr;
                         </a>
                     </div>
                 </div>
 
-                <!-- Card: Selección Única -->
-                <div class="col-md-4">
-                    <div class="card-quiz card-su">
-                        <div class="card-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"/>
-                                <circle cx="12" cy="12" r="4"/>
-                            </svg>
+                <!-- Temáticas -->
+                <div th:each="tematica : ${tematicas}" class="col-md-4">
+                    <div class="card-quiz card-tematica" th:style="'--tematica-color:' + ${tematica.color}">
+                        <div class="card-icon" th:style="'background:' + ${tematica.color} + '18; color:' + ${tematica.color}">
+                            <span th:replace="~{fragments/icon :: icon(${tematica.icono}, 28)}"></span>
                         </div>
-                        <h3>Selección Única</h3>
-                        <p>
-                            Elige la respuesta correcta entre varias opciones. Pon a prueba
-                            tu precisión y conocimiento detallado.
-                        </p>
-                        <a th:href="@{/pregunta/seleccion-unica}" class="btn btn-card">
-                            Empezar quiz &rarr;
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Card: Selección Múltiple -->
-                <div class="col-md-4">
-                    <div class="card-quiz card-sm">
-                        <div class="card-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="3" width="18" height="18" rx="3"/>
-                                <path d="M9 12l2 2 4-4"/>
-                            </svg>
-                        </div>
-                        <h3>Selección Múltiple</h3>
-                        <p>
-                            Marca todas las respuestas correctas. El máximo desafío
-                            para mentes que dominan la materia.
-                        </p>
-                        <a th:href="@{/pregunta/seleccion-multiple}" class="btn btn-card">
+                        <h3 th:text="${tematica.nombre}">Temática</h3>
+                        <p th:text="${tematica.descripcion}">Descripción de la temática.</p>
+                        <a th:href="@{/pregunta/quiz(tematicaId=${tematica.id})}" class="btn btn-card btn-card-tematica">
                             Empezar quiz &rarr;
                         </a>
                     </div>

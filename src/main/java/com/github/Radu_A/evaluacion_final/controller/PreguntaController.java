@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.github.Radu_A.evaluacion_final.dto.ResultadoEvaluacion;
+import com.github.Radu_A.evaluacion_final.dto.ResultadoQuiz;
 import com.github.Radu_A.evaluacion_final.entity.Pregunta;
-import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionMúltiple;
+import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionMultiple;
 import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionUnica;
 import com.github.Radu_A.evaluacion_final.entity.PreguntaVerdaderoFalso;
 import com.github.Radu_A.evaluacion_final.entity.Tematica;
@@ -39,16 +40,21 @@ public class PreguntaController {
     private TematicaRepository tematicaRepository;
 
     @GetMapping("/verdadero-falso")
-    public String verdaderoFalso(Model model) {
-        var preguntas = preguntaService.obtenerPreguntasVF();
+    public String verdaderoFalso(@RequestParam(required = false) Long tematicaId, Model model) {
+        var preguntas = tematicaId != null
+                ? preguntaService.obtenerPreguntasVFByTematica(tematicaId)
+                : preguntaService.obtenerPreguntasVF();
         model.addAttribute("preguntas", preguntas);
         model.addAttribute("enviado", false);
         model.addAttribute("total", preguntas.size());
+        model.addAttribute("tematicaId", tematicaId);
         return "pregunta/verdadero-falso";
     }
 
     @PostMapping("/verdadero-falso")
-    public String evaluarVF(@RequestParam Map<String, String> parametros, Model model) {
+    public String evaluarVF(@RequestParam Map<String, String> parametros,
+                            @RequestParam(required = false) Long tematicaId,
+                            Model model) {
         ResultadoEvaluacion<Boolean> resultado = preguntaService.evaluarVF(parametros);
         model.addAttribute("preguntas", resultado.preguntas());
         model.addAttribute("resultados", resultado.resultados());
@@ -56,20 +62,26 @@ public class PreguntaController {
         model.addAttribute("puntuacion", resultado.puntuacion());
         model.addAttribute("total", resultado.total());
         model.addAttribute("enviado", true);
+        model.addAttribute("tematicaId", tematicaId);
         return "pregunta/verdadero-falso";
     }
 
     @GetMapping("/seleccion-unica")
-    public String seleccionUnica(Model model) {
-        var preguntas = preguntaService.obtenerPreguntasSU();
+    public String seleccionUnica(@RequestParam(required = false) Long tematicaId, Model model) {
+        var preguntas = tematicaId != null
+                ? preguntaService.obtenerPreguntasSUByTematica(tematicaId)
+                : preguntaService.obtenerPreguntasSU();
         model.addAttribute("preguntas", preguntas);
         model.addAttribute("enviado", false);
         model.addAttribute("total", preguntas.size());
+        model.addAttribute("tematicaId", tematicaId);
         return "pregunta/seleccion-unica";
     }
 
     @PostMapping("/seleccion-unica")
-    public String evaluarSU(@RequestParam Map<String, String> parametros, Model model) {
+    public String evaluarSU(@RequestParam Map<String, String> parametros,
+                            @RequestParam(required = false) Long tematicaId,
+                            Model model) {
         ResultadoEvaluacion<String> resultado = preguntaService.evaluarSU(parametros);
         model.addAttribute("preguntas", resultado.preguntas());
         model.addAttribute("resultados", resultado.resultados());
@@ -77,20 +89,26 @@ public class PreguntaController {
         model.addAttribute("puntuacion", resultado.puntuacion());
         model.addAttribute("total", resultado.total());
         model.addAttribute("enviado", true);
+        model.addAttribute("tematicaId", tematicaId);
         return "pregunta/seleccion-unica";
     }
 
     @GetMapping("/seleccion-multiple")
-    public String seleccionMultiple(Model model) {
-        var preguntas = preguntaService.obtenerPreguntasSM();
+    public String seleccionMultiple(@RequestParam(required = false) Long tematicaId, Model model) {
+        var preguntas = tematicaId != null
+                ? preguntaService.obtenerPreguntasSMByTematica(tematicaId)
+                : preguntaService.obtenerPreguntasSM();
         model.addAttribute("preguntas", preguntas);
         model.addAttribute("enviado", false);
         model.addAttribute("total", preguntas.size());
+        model.addAttribute("tematicaId", tematicaId);
         return "pregunta/seleccion-multiple";
     }
 
     @PostMapping("/seleccion-multiple")
-    public String evaluarSM(HttpServletRequest request, Model model) {
+    public String evaluarSM(HttpServletRequest request,
+                            @RequestParam(required = false) Long tematicaId,
+                            Model model) {
         ResultadoEvaluacion<List<String>> resultado = preguntaService.evaluarSM(request.getParameterMap());
         model.addAttribute("preguntas", resultado.preguntas());
         model.addAttribute("resultados", resultado.resultados());
@@ -98,6 +116,7 @@ public class PreguntaController {
         model.addAttribute("puntuacion", resultado.puntuacion());
         model.addAttribute("total", resultado.total());
         model.addAttribute("enviado", true);
+        model.addAttribute("tematicaId", tematicaId);
         return "pregunta/seleccion-multiple";
     }
 
@@ -117,6 +136,30 @@ public class PreguntaController {
         model.addAttribute("filtroTipoPregunta", tipoPregunta);
 
         return "pregunta/menu";
+    }
+
+    @GetMapping("/quiz")
+    public String quiz(@RequestParam(required = false) Long tematicaId, Model model) {
+        var preguntas = preguntaService.obtenerPreguntasByTematica(tematicaId);
+        model.addAttribute("preguntas", preguntas);
+        model.addAttribute("enviado", false);
+        model.addAttribute("total", preguntas.size());
+        model.addAttribute("tematicaId", tematicaId);
+        return "pregunta/quiz";
+    }
+
+    @PostMapping("/quiz")
+    public String evaluarQuiz(@RequestParam(required = false) Long tematicaId,
+                              HttpServletRequest request, Model model) {
+        var preguntas = preguntaService.obtenerPreguntasByTematica(tematicaId);
+        ResultadoQuiz resultado = preguntaService.evaluarQuiz(preguntas, request.getParameterMap());
+        model.addAttribute("preguntas", resultado.preguntas());
+        model.addAttribute("resultados", resultado.resultados());
+        model.addAttribute("puntuacion", resultado.puntuacion());
+        model.addAttribute("total", resultado.total());
+        model.addAttribute("enviado", true);
+        model.addAttribute("tematicaId", tematicaId);
+        return "pregunta/quiz";
     }@GetMapping("/crear")
     public String crearForm(Model model) {
         model.addAttribute("tematicas", preguntaService.obtenerTematicas());
@@ -128,7 +171,13 @@ public class PreguntaController {
         var paramMap = request.getParameterMap();
         String tipo = getParam(paramMap, "tipoPregunta");
         String enunciado = getParam(paramMap, "enunciado");
-        Long tematicaId = Long.parseLong(getParam(paramMap, "tematicaId"));
+        String tematicaIdStr = getParam(paramMap, "tematicaId");
+        if (tematicaIdStr == null || tematicaIdStr.isBlank()) {
+            redirectAttributes.addFlashAttribute("mensaje", "Debes seleccionar una temática.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            return "redirect:/pregunta/crear";
+        }
+        Long tematicaId = Long.parseLong(tematicaIdStr);
         Tematica tematica = tematicaRepository.findById(tematicaId).orElseThrow();
 
         switch (tipo) {
@@ -150,7 +199,7 @@ public class PreguntaController {
                 preguntaService.guardar(p);
             }
             case "SELECCION_MULTIPLE" -> {
-                PreguntaSeleccionMúltiple p = new PreguntaSeleccionMúltiple();
+                PreguntaSeleccionMultiple p = new PreguntaSeleccionMultiple();
                 p.setEnunciado(enunciado);
                 p.setTematica(tematica);
                 List<String> opciones = collectIndexedParams(paramMap, "opcion_");

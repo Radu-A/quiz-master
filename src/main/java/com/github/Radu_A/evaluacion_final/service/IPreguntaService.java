@@ -7,8 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.github.Radu_A.evaluacion_final.dto.ResultadoEvaluacion;
+import com.github.Radu_A.evaluacion_final.dto.ResultadoQuiz;
 import com.github.Radu_A.evaluacion_final.entity.Pregunta;
-import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionMúltiple;
+import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionMultiple;
 import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionUnica;
 import com.github.Radu_A.evaluacion_final.entity.PreguntaVerdaderoFalso;
 import com.github.Radu_A.evaluacion_final.entity.Tematica;
@@ -19,17 +20,27 @@ public interface IPreguntaService {
 
     List<Tematica> obtenerTematicas();
 
+    List<Pregunta> obtenerPreguntasByTematica(Long tematicaId);
+
     List<PreguntaVerdaderoFalso> obtenerPreguntasVF();
+
+    List<PreguntaVerdaderoFalso> obtenerPreguntasVFByTematica(Long tematicaId);
 
     List<PreguntaSeleccionUnica> obtenerPreguntasSU();
 
-    List<PreguntaSeleccionMúltiple> obtenerPreguntasSM();
+    List<PreguntaSeleccionUnica> obtenerPreguntasSUByTematica(Long tematicaId);
+
+    List<PreguntaSeleccionMultiple> obtenerPreguntasSM();
+
+    List<PreguntaSeleccionMultiple> obtenerPreguntasSMByTematica(Long tematicaId);
 
     ResultadoEvaluacion<Boolean> evaluarVF(Map<String, String> parametros);
 
     ResultadoEvaluacion<String> evaluarSU(Map<String, String> parametros);
 
     ResultadoEvaluacion<List<String>> evaluarSM(Map<String, String[]> parametros);
+
+    ResultadoQuiz evaluarQuiz(List<Pregunta> preguntas, Map<String, String[]> allParams);
 
     Pregunta guardar(Pregunta pregunta);
 }
