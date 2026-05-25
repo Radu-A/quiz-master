@@ -20,6 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.Radu_A.evaluacion_final.dto.PreguntaDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import com.github.Radu_A.evaluacion_final.dto.PreguntaSeleccionMultipleDto;
 import com.github.Radu_A.evaluacion_final.dto.PreguntaSeleccionUnicaDto;
 import com.github.Radu_A.evaluacion_final.dto.PreguntaVerdaderoFalsoDto;
@@ -33,6 +40,7 @@ import com.github.Radu_A.evaluacion_final.service.IPreguntaService;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Preguntas", description = "API REST para la gestión de preguntas")
 public class PreguntaRestController {
 
     @Autowired
@@ -42,8 +50,16 @@ public class PreguntaRestController {
     private TematicaRepository tematicaRepository;
 
     @GetMapping("/preguntas")
+    @Operation(summary = "Listar preguntas", description = "Obtiene todas las preguntas. Si se proporcionan page y size, devuelve una lista paginada; de lo contrario, devuelve todas las preguntas.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Lista de preguntas obtenida correctamente",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(oneOf = { PreguntaSeleccionUnicaDto.class, PreguntaSeleccionMultipleDto.class, PreguntaVerdaderoFalsoDto.class })))
+    })
     public ResponseEntity<?> listarPreguntas(
+            @Parameter(description = "Número de página (empezando en 0)")
             @RequestParam(required = false) Integer page,
+            @Parameter(description = "Tamaño de página")
             @RequestParam(required = false) Integer size) {
 
         if (page != null && size != null) {
@@ -59,7 +75,15 @@ public class PreguntaRestController {
     }
 
     @GetMapping("/preguntas/{id}")
-    public ResponseEntity<PreguntaDto> obtenerPregunta(@PathVariable Long id) {
+    @Operation(summary = "Obtener pregunta por ID", description = "Devuelve una pregunta según su identificador único.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Pregunta encontrada",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(oneOf = { PreguntaSeleccionUnicaDto.class, PreguntaSeleccionMultipleDto.class, PreguntaVerdaderoFalsoDto.class }))),
+        @ApiResponse(responseCode = "404", description = "Pregunta no encontrada")
+    })
+    public ResponseEntity<PreguntaDto> obtenerPregunta(
+            @Parameter(description = "ID de la pregunta") @PathVariable Long id) {
         Pregunta p = preguntaService.obtenerPorId(id);
         if (p == null) {
             return ResponseEntity.notFound().build();
@@ -68,15 +92,39 @@ public class PreguntaRestController {
     }
 
     @PostMapping("/preguntas")
-    public ResponseEntity<PreguntaDto> crearPregunta(@RequestBody PreguntaDto dto) {
+    @Operation(summary = "Crear pregunta", description = "Crea una nueva pregunta. El tipo se determina mediante la propiedad 'tipoPregunta' en el JSON.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Pregunta creada correctamente",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(oneOf = { PreguntaSeleccionUnicaDto.class, PreguntaSeleccionMultipleDto.class, PreguntaVerdaderoFalsoDto.class }))),
+        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
+    public ResponseEntity<PreguntaDto> crearPregunta(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Datos de la pregunta a crear",
+                required = true,
+                content = @Content(schema = @Schema(oneOf = { PreguntaSeleccionUnicaDto.class, PreguntaSeleccionMultipleDto.class, PreguntaVerdaderoFalsoDto.class })))
+            @RequestBody PreguntaDto dto) {
         Pregunta entity = toEntity(dto, null);
         Pregunta guardada = preguntaService.guardar(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(toDto(guardada));
     }
 
     @PutMapping("/preguntas/{id}")
+    @Operation(summary = "Actualizar pregunta", description = "Actualiza una pregunta existente por su ID.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Pregunta actualizada correctamente",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(oneOf = { PreguntaSeleccionUnicaDto.class, PreguntaSeleccionMultipleDto.class, PreguntaVerdaderoFalsoDto.class }))),
+        @ApiResponse(responseCode = "404", description = "Pregunta no encontrada"),
+        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
     public ResponseEntity<PreguntaDto> actualizarPregunta(
-            @PathVariable Long id,
+            @Parameter(description = "ID de la pregunta a actualizar") @PathVariable Long id,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Datos actualizados de la pregunta",
+                required = true,
+                content = @Content(schema = @Schema(oneOf = { PreguntaSeleccionUnicaDto.class, PreguntaSeleccionMultipleDto.class, PreguntaVerdaderoFalsoDto.class })))
             @RequestBody PreguntaDto dto) {
         if (preguntaService.obtenerPorId(id) == null) {
             return ResponseEntity.notFound().build();
@@ -87,7 +135,13 @@ public class PreguntaRestController {
     }
 
     @DeleteMapping("/preguntas/{id}")
-    public ResponseEntity<Void> eliminarPregunta(@PathVariable Long id) {
+    @Operation(summary = "Eliminar pregunta", description = "Elimina una pregunta por su ID.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Pregunta eliminada correctamente"),
+        @ApiResponse(responseCode = "404", description = "Pregunta no encontrada")
+    })
+    public ResponseEntity<Void> eliminarPregunta(
+            @Parameter(description = "ID de la pregunta a eliminar") @PathVariable Long id) {
         if (preguntaService.obtenerPorId(id) == null) {
             return ResponseEntity.notFound().build();
         }
