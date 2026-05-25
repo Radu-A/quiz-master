@@ -20,7 +20,8 @@
         <div class="container">
             <div class="quiz-results-wrap">
                 <div class="quiz-score-card">
-                    <div class="quiz-score-ring" th:classappend="${puntuacion == total ? 'ring-perfect' : (puntuacion >= total/2.0 ? 'ring-good' : 'ring-low')}">
+                    <div class="quiz-score-ring"
+                         th:classappend="${puntuacion == total ? 'ring-perfect' : (puntuacion >= total/2.0 ? 'ring-good' : 'ring-low')}">
                         <span class="quiz-score-number" th:text="${puntuacion} + '/' + ${total}">2/3</span>
                     </div>
                     <p class="quiz-score-label">
@@ -31,11 +32,11 @@
                 </div>
 
                 <div th:each="pregunta, iterStat : ${preguntas}" class="quiz-card"
-                     th:classappend="${resultados[pregunta.id] ? 'quiz-card-correct' : 'quiz-card-incorrect'}">
+                     th:classappend="(${pregunta.class.simpleName == 'PreguntaVerdaderoFalso'} ? 'quiz-card-vf' : (${pregunta.class.simpleName == 'PreguntaSeleccionUnica'} ? 'quiz-card-su' : 'quiz-card-sm')) + ' ' + (${resultados[pregunta.id]} ? 'quiz-card-correct' : 'quiz-card-incorrect')">
                     <div class="quiz-card-header">
                         <span class="quiz-card-number" th:text="'Pregunta ' + (${iterStat.index} + 1) + ' de ' + ${total}">Pregunta 1</span>
                         <span class="quiz-card-theme" th:text="${pregunta.tematica.nombre}">Temática</span>
-                        <span class="quiz-result-icon" th:utext="${resultados[pregunta.id] ? '&#10003;' : '&#10007;'}">✓</span>
+                        <span class="quiz-result-icon" th:utext="${resultados[pregunta.id]} ? '&#10003;' : '&#10007;'">✓</span>
                     </div>
                     <p class="quiz-card-question" th:text="${pregunta.enunciado}">Enunciado aquí</p>
 
@@ -44,6 +45,40 @@
                             <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
                         </svg>
                         <span>Respuesta incorrecta</span>
+                    </div>
+
+                    <!-- Verdadero / Falso -->
+                    <div th:if="${pregunta.class.simpleName == 'PreguntaVerdaderoFalso'}" class="quiz-options readonly">
+                        <div class="quiz-option" th:classappend="${pregunta.respuestaCorrecta} ? 'quiz-option-correct' : ''">
+                            <span class="quiz-option-marker quiz-option-marker-true">V</span>
+                            <span class="quiz-option-text">Verdadero</span>
+                            <span class="quiz-option-badge" th:if="${pregunta.respuestaCorrecta}">Correcta</span>
+                        </div>
+                        <div class="quiz-option" th:classappend="${!pregunta.respuestaCorrecta} ? 'quiz-option-correct' : ''">
+                            <span class="quiz-option-marker quiz-option-marker-false">F</span>
+                            <span class="quiz-option-text">Falso</span>
+                            <span class="quiz-option-badge" th:if="${!pregunta.respuestaCorrecta}">Correcta</span>
+                        </div>
+                    </div>
+
+                    <!-- Selección Única -->
+                    <div th:if="${pregunta.class.simpleName == 'PreguntaSeleccionUnica'}" class="quiz-options readonly">
+                        <div th:each="opcion : ${pregunta.opciones}" class="quiz-option"
+                             th:classappend="${opcion == pregunta.opcionCorrecta} ? 'quiz-option-correct' : ''">
+                            <span class="quiz-option-marker quiz-option-marker-su" th:text="${#strings.substring(opcion, 0, 1)}">A</span>
+                            <span class="quiz-option-text" th:text="${opcion}">Opción</span>
+                            <span class="quiz-option-badge" th:if="${opcion == pregunta.opcionCorrecta}">Correcta</span>
+                        </div>
+                    </div>
+
+                    <!-- Selección Múltiple -->
+                    <div th:if="${pregunta.class.simpleName == 'PreguntaSeleccionMultiple'}" class="quiz-options readonly">
+                        <div th:each="opcion : ${pregunta.opciones}" class="quiz-option"
+                             th:classappend="${pregunta.opcionesCorrectas.contains(opcion)} ? 'quiz-option-correct' : ''">
+                            <span class="quiz-option-marker quiz-option-marker-sm" th:text="${#strings.substring(opcion, 0, 1)}">A</span>
+                            <span class="quiz-option-text" th:text="${opcion}">Opción</span>
+                            <span class="quiz-option-badge" th:if="${pregunta.opcionesCorrectas.contains(opcion)}">Correcta</span>
+                        </div>
                     </div>
                 </div>
 

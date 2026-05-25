@@ -13,7 +13,7 @@ public class PreguntaSeleccionUnica extends Pregunta {
 
 	// Podrías guardar las opciones como una lista de Strings en otra tabla
 	// intermedia
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "opciones_seleccion_unica", joinColumns = @JoinColumn(name = "pregunta_id"))
 	@Column(name = "opcion")
 	private List<String> opciones;
