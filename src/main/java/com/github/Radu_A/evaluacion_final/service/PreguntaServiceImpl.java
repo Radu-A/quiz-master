@@ -187,6 +187,11 @@ public class PreguntaServiceImpl implements IPreguntaService {
     }
 
     @Override
+    public Pregunta obtenerPorId(Long id) {
+        return preguntaRepo.findById(id).orElse(null);
+    }
+
+    @Override
     public ResultadoQuiz evaluarQuiz(List<Pregunta> preguntas, Map<String, String[]> allParams) {
         int puntuacion = 0;
         Map<Long, Boolean> resultados = new HashMap<>();
@@ -221,5 +226,23 @@ public class PreguntaServiceImpl implements IPreguntaService {
         }
 
         return new ResultadoQuiz(preguntas, resultados, puntuacion, preguntas.size());
+    }
+
+    @Override
+    public List<Pregunta> obtenerPreguntasQuiz(Long tematicaId) {
+        List<Pregunta> preguntas = new ArrayList<>();
+        List<PreguntaSeleccionUnica> suList = tematicaId != null
+                ? suRepo.findByTematicaId(tematicaId)
+                : suRepo.findAll();
+        List<PreguntaVerdaderoFalso> vfList = tematicaId != null
+                ? vfRepo.findByTematicaId(tematicaId)
+                : vfRepo.findAll();
+        List<PreguntaSeleccionMultiple> smList = tematicaId != null
+                ? smRepo.findByTematicaId(tematicaId)
+                : smRepo.findAll();
+        preguntas.addAll(suList.stream().limit(3).toList());
+        preguntas.addAll(vfList.stream().limit(2).toList());
+        preguntas.addAll(smList.stream().limit(1).toList());
+        return preguntas;
     }
 }

@@ -42,7 +42,7 @@
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li th:each="t : ${tematicas}">
-                                <a class="dropdown-item" th:href="@{/pregunta/quiz(tematicaId=${t.id})}"
+                                <a class="dropdown-item" th:href="@{/pregunta/quiz(tematicaId=${t.slug})}"
                                    th:style="'--item-color:' + ${t.color}">
                                     <span class="dropdown-item-icon" th:replace="~{fragments/icon :: icon(${t.icono}, 18)}"></span>
                                     <span th:text="${t.nombre}">Temática</span>

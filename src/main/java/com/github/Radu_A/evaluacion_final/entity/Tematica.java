@@ -17,6 +17,9 @@ public class Tematica {
     @Column(nullable = false, unique = true)
     private String nombre;
 
+    @Column(nullable = false, unique = true)
+    private String slug;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 

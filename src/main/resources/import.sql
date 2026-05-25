@@ -1,11 +1,11 @@
 -- ============================================================
 -- Temáticas
 -- ============================================================
-INSERT INTO tematicas (id, nombre, descripcion, color, icono) VALUES (1, 'Cibercultura y Frikismo', 'Desde las entrañas del código y la historia hacker hasta los secretos mejor guardados del cine, la literatura y los videojuegos.', '#3b82f6', 'code');
-INSERT INTO tematicas (id, nombre, descripcion, color, icono) VALUES (2, 'Biología Extrema', 'Criaturas indestructibles, mecanismos de defensa letales, venenos exóticos y rarezas de la flora y fauna mundial.', '#10b981', 'leaf');
-INSERT INTO tematicas (id, nombre, descripcion, color, icono) VALUES (3, 'Paradojas Cósmicas', 'Viajes en el tiempo, física cuántica, agujeros negros y experimentos mentales que desafían la lógica humana.', '#8b5cf6', 'orbit');
-INSERT INTO tematicas (id, nombre, descripcion, color, icono) VALUES (4, 'Legalmente Absurdo', 'Normas vigentes, prohibiciones extrañas y leyes históricas de distintos países que parecen una auténtica broma.', '#f59e0b', 'scale');
-INSERT INTO tematicas (id, nombre, descripcion, color, icono) VALUES (5, 'Manual de Supervivencia', 'Qué hacer en situaciones límite, cómo sobrevivir a la naturaleza salvaje y los peligros ocultos en la gastronomía extrema.', '#f43f5e', 'compass');
+INSERT INTO tematicas (id, nombre, slug, descripcion, color, icono) VALUES (1, 'Cibercultura y Frikismo', 'cibercultura-y-frikismo', 'Desde las entrañas del código y la historia hacker hasta los secretos mejor guardados del cine, la literatura y los videojuegos.', '#3b82f6', 'code');
+INSERT INTO tematicas (id, nombre, slug, descripcion, color, icono) VALUES (2, 'Biología Extrema', 'biologia-extrema', 'Criaturas indestructibles, mecanismos de defensa letales, venenos exóticos y rarezas de la flora y fauna mundial.', '#10b981', 'leaf');
+INSERT INTO tematicas (id, nombre, slug, descripcion, color, icono) VALUES (3, 'Paradojas Cósmicas', 'paradojas-cosmicas', 'Viajes en el tiempo, física cuántica, agujeros negros y experimentos mentales que desafían la lógica humana.', '#8b5cf6', 'orbit');
+INSERT INTO tematicas (id, nombre, slug, descripcion, color, icono) VALUES (4, 'Legalmente Absurdo', 'legalmente-absurdo', 'Normas vigentes, prohibiciones extrañas y leyes históricas de distintos países que parecen una auténtica broma.', '#f59e0b', 'scale');
+INSERT INTO tematicas (id, nombre, slug, descripcion, color, icono) VALUES (5, 'Manual de Supervivencia', 'manual-de-supervivencia', 'Qué hacer en situaciones límite, cómo sobrevivir a la naturaleza salvaje y los peligros ocultos en la gastronomía extrema.', '#f43f5e', 'compass');
 
 -- ============================================================
 -- Preguntas Verdadero/Falso (25)

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title th:text="'Resultado — QuizMaster'">Resultado — QuizMaster</title>
+</head>
+<body>
+
+<section>
+    <div class="quiz-hero quiz-hero-desafio">
+        <div class="container text-center">
+            <span class="badge-pill">Resultado</span>
+            <h1>Resultado del <span class="highlight">Desafío</span></h1>
+            <p th:if="${tematicaNombre != null}" th:text="'Temática: ' + ${tematicaNombre}">Temática</p>
+            <p th:if="${tematicaNombre == null}">Todas las temáticas combinadas</p>
+        </div>
+    </div>
+
+    <div class="quiz-section">
+        <div class="container">
+            <div class="quiz-results-wrap">
+                <div class="quiz-score-card">
+                    <div class="quiz-score-ring" th:classappend="${puntuacion == total ? 'ring-perfect' : (puntuacion >= total/2.0 ? 'ring-good' : 'ring-low')}">
+                        <span class="quiz-score-number" th:text="${puntuacion} + '/' + ${total}">2/3</span>
+                    </div>
+                    <p class="quiz-score-label">
+                        <th:block th:if="${puntuacion == total}">¡Perfecto! Has acertado todas.</th:block>
+                        <th:block th:if="${puntuacion >= total/2.0 && puntuacion < total}">¡Buen trabajo! Sigue practicando.</th:block>
+                        <th:block th:if="${puntuacion < total/2.0}">Sigue intentándolo, ¡tú puedes!</th:block>
+                    </p>
+                </div>
+
+                <div th:each="pregunta, iterStat : ${preguntas}" class="quiz-card"
+                     th:classappend="${resultados[pregunta.id] ? 'quiz-card-correct' : 'quiz-card-incorrect'}">
+                    <div class="quiz-card-header">
+                        <span class="quiz-card-number" th:text="'Pregunta ' + (${iterStat.index} + 1) + ' de ' + ${total}">Pregunta 1</span>
+                        <span class="quiz-card-theme" th:text="${pregunta.tematica.nombre}">Temática</span>
+                        <span class="quiz-result-icon" th:utext="${resultados[pregunta.id] ? '&#10003;' : '&#10007;'}">✓</span>
+                    </div>
+                    <p class="quiz-card-question" th:text="${pregunta.enunciado}">Enunciado aquí</p>
+
+                    <div th:if="${!resultados[pregunta.id]}" class="quiz-error-message">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                        <span>Respuesta incorrecta</span>
+                    </div>
+                </div>
+
+                <div class="quiz-submit-wrap">
+                    <a th:href="@{/pregunta/quiz(tematicaId=${tematicaId})}" class="btn-quiz-submit btn-quiz-submit-su">
+                        Volver a intentarlo
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>

@@ -112,7 +112,7 @@
                         </div>
                         <h3 th:text="${tematica.nombre}">Temática</h3>
                         <p th:text="${tematica.descripcion}">Descripción de la temática.</p>
-                        <a th:href="@{/pregunta/quiz(tematicaId=${tematica.id})}" class="btn btn-card btn-card-tematica">
+                        <a th:href="@{/pregunta/quiz(tematicaId=${tematica.slug})}" class="btn btn-card btn-card-tematica">
                             Empezar quiz &rarr;
                         </a>
                     </div>

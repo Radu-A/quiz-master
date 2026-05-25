@@ -693,6 +693,19 @@ main {
   letter-spacing: -0.01em;
 }
 
+.quiz-error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: rgba(244, 63, 94, 0.08);
+  color: var(--accent-rose);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+}
+
 /* ── Quiz Options ── */
 .quiz-options {
   display: flex;

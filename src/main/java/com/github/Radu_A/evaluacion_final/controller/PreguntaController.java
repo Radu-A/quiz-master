@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -139,35 +140,208 @@ public class PreguntaController {
     }
 
     @GetMapping("/quiz")
-    public String quiz(@RequestParam(required = false) Long tematicaId, Model model) {
-        var preguntas = preguntaService.obtenerPreguntasByTematica(tematicaId);
+    public String quiz(@RequestParam(required = false) String tematicaId, Model model) {
+        Long tematicaIdLong = null;
+        Tematica tematica = null;
+        if (tematicaId != null && !tematicaId.isBlank()) {
+            tematica = tematicaRepository.findBySlug(tematicaId).orElse(null);
+            if (tematica != null) {
+                tematicaIdLong = tematica.getId();
+            }
+        }
+        var preguntas = preguntaService.obtenerPreguntasQuiz(tematicaIdLong);
         model.addAttribute("preguntas", preguntas);
-        model.addAttribute("enviado", false);
         model.addAttribute("total", preguntas.size());
         model.addAttribute("tematicaId", tematicaId);
+        model.addAttribute("tematica", tematica);
         return "pregunta/quiz";
     }
 
     @PostMapping("/quiz")
-    public String evaluarQuiz(@RequestParam(required = false) Long tematicaId,
-                              HttpServletRequest request, Model model) {
-        var preguntas = preguntaService.obtenerPreguntasByTematica(tematicaId);
+    public String evaluarQuiz(@RequestParam(required = false) String tematicaId,
+                              HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        Long tematicaIdLong = null;
+        Tematica tematica = null;
+        if (tematicaId != null && !tematicaId.isBlank()) {
+            tematica = tematicaRepository.findBySlug(tematicaId).orElse(null);
+            if (tematica != null) {
+                tematicaIdLong = tematica.getId();
+            }
+        }
+        var preguntas = preguntaService.obtenerPreguntasQuiz(tematicaIdLong);
         ResultadoQuiz resultado = preguntaService.evaluarQuiz(preguntas, request.getParameterMap());
-        model.addAttribute("preguntas", resultado.preguntas());
-        model.addAttribute("resultados", resultado.resultados());
-        model.addAttribute("puntuacion", resultado.puntuacion());
-        model.addAttribute("total", resultado.total());
-        model.addAttribute("enviado", true);
-        model.addAttribute("tematicaId", tematicaId);
-        return "pregunta/quiz";
-    }@GetMapping("/formulario-pregunta")
+        redirectAttributes.addFlashAttribute("preguntas", resultado.preguntas());
+        redirectAttributes.addFlashAttribute("resultados", resultado.resultados());
+        redirectAttributes.addFlashAttribute("puntuacion", resultado.puntuacion());
+        redirectAttributes.addFlashAttribute("total", resultado.total());
+        redirectAttributes.addFlashAttribute("tematicaId", tematicaId);
+        if (tematica != null) {
+            redirectAttributes.addFlashAttribute("tematicaNombre", tematica.getNombre());
+            redirectAttributes.addFlashAttribute("tematicaColor", tematica.getColor());
+            redirectAttributes.addFlashAttribute("tematicaDescripcion", tematica.getDescripcion());
+        }
+        return "redirect:/pregunta/resultado";
+    }
+
+    @GetMapping("/resultado")
+    public String resultado(Model model) {
+        if (!model.containsAttribute("preguntas")) {
+            return "redirect:/pregunta/quiz";
+        }
+        return "pregunta/resultado";
+    }    @GetMapping("/formulario-pregunta")
     public String crearForm(Model model) {
         model.addAttribute("tematicas", preguntaService.obtenerTematicas());
+        model.addAttribute("editMode", false);
         return "pregunta/formulario-pregunta";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editarForm(@PathVariable Long id, Model model) {
+        Pregunta pregunta = preguntaService.obtenerPorId(id);
+        if (pregunta == null) {
+            return "redirect:/pregunta/menu";
+        }
+        
+            model.addAttribute("tematicas", preguntaService.obtenerTematicas());
+            model.addAttribute("pregunta", pregunta);
+            
+            // Determinar el tipo de pregunta para mostrar la sección correcta
+            String tipoPregunta = "";
+            if (pregunta instanceof PreguntaVerdaderoFalso) {
+                tipoPregunta = "VERDADERO_FALSO";
+                PreguntaVerdaderoFalso vf = (PreguntaVerdaderoFalso) pregunta;
+                model.addAttribute("respuestaCorrecta", Boolean.toString(vf.isRespuestaCorrecta()));
+            } else if (pregunta instanceof PreguntaSeleccionUnica) {
+                tipoPregunta = "SELECCION_UNICA";
+                PreguntaSeleccionUnica su = (PreguntaSeleccionUnica) pregunta;
+                model.addAttribute("opciones", su.getOpciones());
+                model.addAttribute("opcionCorrecta", su.getOpcionCorrecta());
+            } else if (pregunta instanceof PreguntaSeleccionMultiple) {
+                tipoPregunta = "SELECCION_MULTIPLE";
+                PreguntaSeleccionMultiple sm = (PreguntaSeleccionMultiple) pregunta;
+                model.addAttribute("opciones", sm.getOpciones());
+                model.addAttribute("opcionesCorrectas", sm.getOpcionesCorrectas());
+            }
+        
+        model.addAttribute("tipoPregunta", tipoPregunta);
+        model.addAttribute("enunciado", pregunta.getEnunciado());
+        model.addAttribute("tematicaId", pregunta.getTematica().getId());
+        model.addAttribute("editMode", true);
+        model.addAttribute("preguntaId", id);
+        
+        return "pregunta/formulario-pregunta";
+    }
+    
+    @PostMapping("/editar/{id}")
+    public String editar(@PathVariable Long id, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        var paramMap = request.getParameterMap();
+        String tipo = getParam(paramMap, "tipoPregunta");
+        String enunciado = getParam(paramMap, "enunciado");
+        String tematicaIdStr = getParam(paramMap, "tematicaId");
+        
+        if (tematicaIdStr == null || tematicaIdStr.isBlank()) {
+            redirectAttributes.addFlashAttribute("mensaje", "Debes seleccionar una temática.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            return "redirect:/pregunta/formulario-pregunta";
+        }
+        
+        Long tematicaId = Long.parseLong(tematicaIdStr);
+        Tematica tematica = tematicaRepository.findById(tematicaId).orElseThrow();
+        
+        Pregunta preguntaExistente = preguntaService.obtenerPorId(id);
+        if (preguntaExistente == null) {
+            redirectAttributes.addFlashAttribute("mensaje", "Pregunta no encontrada.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            return "redirect:/pregunta/menu";
+        }
+        
+        switch (tipo) {
+            case "VERDADERO_FALSO" -> {
+                PreguntaVerdaderoFalso p = (PreguntaVerdaderoFalso) preguntaExistente;
+                p.setEnunciado(enunciado);
+                p.setTematica(tematica);
+                p.setRespuestaCorrecta(Boolean.parseBoolean(getParam(paramMap, "respuestaCorrecta")));
+                preguntaService.guardar(p);
+            }
+            case "SELECCION_UNICA" -> {
+                PreguntaSeleccionUnica p = (PreguntaSeleccionUnica) preguntaExistente;
+                p.setEnunciado(enunciado);
+                p.setTematica(tematica);
+                List<String> opciones = collectIndexedParams(paramMap, "opcion_");
+                p.setOpciones(opciones);
+                int correctaIdx = Integer.parseInt(getParam(paramMap, "opcionCorrecta"));
+                p.setOpcionCorrecta(opciones.get(correctaIdx));
+                preguntaService.guardar(p);
+            }
+            case "SELECCION_MULTIPLE" -> {
+                PreguntaSeleccionMultiple p = (PreguntaSeleccionMultiple) preguntaExistente;
+                p.setEnunciado(enunciado);
+                p.setTematica(tematica);
+                List<String> opciones = collectIndexedParams(paramMap, "opcion_");
+                p.setOpciones(opciones);
+                List<String> correctas = collectCorrectasFromIndices(paramMap, opciones);
+                p.setOpcionesCorrectas(correctas);
+                preguntaService.guardar(p);
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("mensaje", "Pregunta actualizada correctamente");
+        redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        return "redirect:/pregunta/menu";
     }
 
     @PostMapping("/formulario-pregunta")
     public String crear(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        var paramMap = request.getParameterMap();
+        String tipo = getParam(paramMap, "tipoPregunta");
+        String enunciado = getParam(paramMap, "enunciado");
+        String tematicaIdStr = getParam(paramMap, "tematicaId");
+        if (tematicaIdStr == null || tematicaIdStr.isBlank()) {
+            redirectAttributes.addFlashAttribute("mensaje", "Debes seleccionar una temática.");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            return "redirect:/pregunta/formulario-pregunta";
+        }
+        Long tematicaId = Long.parseLong(tematicaIdStr);
+        Tematica tematica = tematicaRepository.findById(tematicaId).orElseThrow();
+
+        switch (tipo) {
+            case "VERDADERO_FALSO" -> {
+                PreguntaVerdaderoFalso p = new PreguntaVerdaderoFalso();
+                p.setEnunciado(enunciado);
+                p.setTematica(tematica);
+                p.setRespuestaCorrecta(Boolean.parseBoolean(getParam(paramMap, "respuestaCorrecta")));
+                preguntaService.guardar(p);
+            }
+            case "SELECCION_UNICA" -> {
+                PreguntaSeleccionUnica p = new PreguntaSeleccionUnica();
+                p.setEnunciado(enunciado);
+                p.setTematica(tematica);
+                List<String> opciones = collectIndexedParams(paramMap, "opcion_");
+                p.setOpciones(opciones);
+                int correctaIdx = Integer.parseInt(getParam(paramMap, "opcionCorrecta"));
+                p.setOpcionCorrecta(opciones.get(correctaIdx));
+                preguntaService.guardar(p);
+            }
+            case "SELECCION_MULTIPLE" -> {
+                PreguntaSeleccionMultiple p = new PreguntaSeleccionMultiple();
+                p.setEnunciado(enunciado);
+                p.setTematica(tematica);
+                List<String> opciones = collectIndexedParams(paramMap, "opcion_");
+                p.setOpciones(opciones);
+                List<String> correctas = collectCorrectasFromIndices(paramMap, opciones);
+                p.setOpcionesCorrectas(correctas);
+                preguntaService.guardar(p);
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("mensaje", "Pregunta creada correctamente");
+        redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        return "redirect:/pregunta/menu";
+    }
+
+    @PostMapping("/guardar")
+    public String guardar(HttpServletRequest request, RedirectAttributes redirectAttributes) {
         var paramMap = request.getParameterMap();
         String tipo = getParam(paramMap, "tipoPregunta");
         String enunciado = getParam(paramMap, "enunciado");

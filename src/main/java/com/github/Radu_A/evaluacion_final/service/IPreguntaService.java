@@ -42,5 +42,9 @@ public interface IPreguntaService {
 
     ResultadoQuiz evaluarQuiz(List<Pregunta> preguntas, Map<String, String[]> allParams);
 
+    List<Pregunta> obtenerPreguntasQuiz(Long tematicaId);
+
     Pregunta guardar(Pregunta pregunta);
+
+    Pregunta obtenerPorId(Long id);
 }
