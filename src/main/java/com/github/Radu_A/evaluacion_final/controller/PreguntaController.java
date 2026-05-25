@@ -11,15 +11,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.github.Radu_A.evaluacion_final.dto.PreguntaForm;
 import com.github.Radu_A.evaluacion_final.dto.ResultadoEvaluacion;
 import com.github.Radu_A.evaluacion_final.dto.ResultadoQuiz;
+
+import jakarta.validation.Valid;
 import com.github.Radu_A.evaluacion_final.entity.Pregunta;
 import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionMultiple;
 import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionUnica;
@@ -203,6 +208,9 @@ public class PreguntaController {
     public String crearForm(Model model) {
         model.addAttribute("tematicas", preguntaService.obtenerTematicas());
         model.addAttribute("editMode", false);
+        if (!model.containsAttribute("preguntaForm")) {
+            model.addAttribute("preguntaForm", new PreguntaForm());
+        }
         return "pregunta/formulario-pregunta";
     }
 
@@ -212,71 +220,81 @@ public class PreguntaController {
         if (pregunta == null) {
             return "redirect:/pregunta/menu";
         }
-        
-            model.addAttribute("tematicas", preguntaService.obtenerTematicas());
-            model.addAttribute("pregunta", pregunta);
-            
-            // Determinar el tipo de pregunta para mostrar la sección correcta
-            String tipoPregunta = "";
-            if (pregunta instanceof PreguntaVerdaderoFalso) {
-                tipoPregunta = "VERDADERO_FALSO";
-                PreguntaVerdaderoFalso vf = (PreguntaVerdaderoFalso) pregunta;
-                model.addAttribute("respuestaCorrecta", Boolean.toString(vf.isRespuestaCorrecta()));
-            } else if (pregunta instanceof PreguntaSeleccionUnica) {
-                tipoPregunta = "SELECCION_UNICA";
-                PreguntaSeleccionUnica su = (PreguntaSeleccionUnica) pregunta;
-                model.addAttribute("opciones", su.getOpciones());
-                model.addAttribute("opcionCorrecta", su.getOpcionCorrecta());
-            } else if (pregunta instanceof PreguntaSeleccionMultiple) {
-                tipoPregunta = "SELECCION_MULTIPLE";
-                PreguntaSeleccionMultiple sm = (PreguntaSeleccionMultiple) pregunta;
-                model.addAttribute("opciones", sm.getOpciones());
-                model.addAttribute("opcionesCorrectas", sm.getOpcionesCorrectas());
-            }
-        
+
+        model.addAttribute("tematicas", preguntaService.obtenerTematicas());
+        model.addAttribute("pregunta", pregunta);
+
+        String tipoPregunta = "";
+        if (pregunta instanceof PreguntaVerdaderoFalso) {
+            tipoPregunta = "VERDADERO_FALSO";
+            PreguntaVerdaderoFalso vf = (PreguntaVerdaderoFalso) pregunta;
+            model.addAttribute("respuestaCorrecta", Boolean.toString(vf.isRespuestaCorrecta()));
+        } else if (pregunta instanceof PreguntaSeleccionUnica) {
+            tipoPregunta = "SELECCION_UNICA";
+            PreguntaSeleccionUnica su = (PreguntaSeleccionUnica) pregunta;
+            model.addAttribute("opciones", su.getOpciones());
+            model.addAttribute("opcionCorrecta", su.getOpcionCorrecta());
+        } else if (pregunta instanceof PreguntaSeleccionMultiple) {
+            tipoPregunta = "SELECCION_MULTIPLE";
+            PreguntaSeleccionMultiple sm = (PreguntaSeleccionMultiple) pregunta;
+            model.addAttribute("opciones", sm.getOpciones());
+            model.addAttribute("opcionesCorrectas", sm.getOpcionesCorrectas());
+        }
+
+        if (!model.containsAttribute("preguntaForm")) {
+            PreguntaForm form = new PreguntaForm();
+            form.setEnunciado(pregunta.getEnunciado());
+            form.setTematicaId(String.valueOf(pregunta.getTematica().getId()));
+            form.setTipoPregunta(tipoPregunta);
+            model.addAttribute("preguntaForm", form);
+        }
+
         model.addAttribute("tipoPregunta", tipoPregunta);
         model.addAttribute("enunciado", pregunta.getEnunciado());
         model.addAttribute("tematicaId", pregunta.getTematica().getId());
         model.addAttribute("editMode", true);
         model.addAttribute("preguntaId", id);
-        
+
         return "pregunta/formulario-pregunta";
     }
     
     @PostMapping("/editar/{id}")
-    public String editar(@PathVariable Long id, HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        var paramMap = request.getParameterMap();
-        String tipo = getParam(paramMap, "tipoPregunta");
-        String enunciado = getParam(paramMap, "enunciado");
-        String tematicaIdStr = getParam(paramMap, "tematicaId");
-        
-        if (tematicaIdStr == null || tematicaIdStr.isBlank()) {
-            redirectAttributes.addFlashAttribute("mensaje", "Debes seleccionar una temática.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
-            return "redirect:/pregunta/formulario-pregunta";
+    public String editar(@PathVariable Long id,
+                         @Valid @ModelAttribute("preguntaForm") PreguntaForm form,
+                         BindingResult result,
+                         HttpServletRequest request,
+                         Model model,
+                         RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("tematicas", preguntaService.obtenerTematicas());
+            model.addAttribute("editMode", true);
+            model.addAttribute("preguntaId", id);
+            model.addAttribute("tipoPregunta", form.getTipoPregunta());
+            return "pregunta/formulario-pregunta";
         }
-        
-        Long tematicaId = Long.parseLong(tematicaIdStr);
+
+        var paramMap = request.getParameterMap();
+        Long tematicaId = Long.parseLong(form.getTematicaId());
         Tematica tematica = tematicaRepository.findById(tematicaId).orElseThrow();
-        
+
         Pregunta preguntaExistente = preguntaService.obtenerPorId(id);
         if (preguntaExistente == null) {
             redirectAttributes.addFlashAttribute("mensaje", "Pregunta no encontrada.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
             return "redirect:/pregunta/menu";
         }
-        
-        switch (tipo) {
+
+        switch (form.getTipoPregunta()) {
             case "VERDADERO_FALSO" -> {
                 PreguntaVerdaderoFalso p = (PreguntaVerdaderoFalso) preguntaExistente;
-                p.setEnunciado(enunciado);
+                p.setEnunciado(form.getEnunciado());
                 p.setTematica(tematica);
                 p.setRespuestaCorrecta(Boolean.parseBoolean(getParam(paramMap, "respuestaCorrecta")));
                 preguntaService.guardar(p);
             }
             case "SELECCION_UNICA" -> {
                 PreguntaSeleccionUnica p = (PreguntaSeleccionUnica) preguntaExistente;
-                p.setEnunciado(enunciado);
+                p.setEnunciado(form.getEnunciado());
                 p.setTematica(tematica);
                 List<String> opciones = collectIndexedParams(paramMap, "opcion_");
                 p.setOpciones(opciones);
@@ -286,7 +304,7 @@ public class PreguntaController {
             }
             case "SELECCION_MULTIPLE" -> {
                 PreguntaSeleccionMultiple p = (PreguntaSeleccionMultiple) preguntaExistente;
-                p.setEnunciado(enunciado);
+                p.setEnunciado(form.getEnunciado());
                 p.setTematica(tematica);
                 List<String> opciones = collectIndexedParams(paramMap, "opcion_");
                 p.setOpciones(opciones);
@@ -302,30 +320,33 @@ public class PreguntaController {
     }
 
     @PostMapping("/formulario-pregunta")
-    public String crear(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        var paramMap = request.getParameterMap();
-        String tipo = getParam(paramMap, "tipoPregunta");
-        String enunciado = getParam(paramMap, "enunciado");
-        String tematicaIdStr = getParam(paramMap, "tematicaId");
-        if (tematicaIdStr == null || tematicaIdStr.isBlank()) {
-            redirectAttributes.addFlashAttribute("mensaje", "Debes seleccionar una temática.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
-            return "redirect:/pregunta/formulario-pregunta";
+    public String crear(@Valid @ModelAttribute("preguntaForm") PreguntaForm form,
+                        BindingResult result,
+                        HttpServletRequest request,
+                        Model model,
+                        RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("tematicas", preguntaService.obtenerTematicas());
+            model.addAttribute("editMode", false);
+            model.addAttribute("tipoPregunta", form.getTipoPregunta());
+            return "pregunta/formulario-pregunta";
         }
-        Long tematicaId = Long.parseLong(tematicaIdStr);
+
+        var paramMap = request.getParameterMap();
+        Long tematicaId = Long.parseLong(form.getTematicaId());
         Tematica tematica = tematicaRepository.findById(tematicaId).orElseThrow();
 
-        switch (tipo) {
+        switch (form.getTipoPregunta()) {
             case "VERDADERO_FALSO" -> {
                 PreguntaVerdaderoFalso p = new PreguntaVerdaderoFalso();
-                p.setEnunciado(enunciado);
+                p.setEnunciado(form.getEnunciado());
                 p.setTematica(tematica);
                 p.setRespuestaCorrecta(Boolean.parseBoolean(getParam(paramMap, "respuestaCorrecta")));
                 preguntaService.guardar(p);
             }
             case "SELECCION_UNICA" -> {
                 PreguntaSeleccionUnica p = new PreguntaSeleccionUnica();
-                p.setEnunciado(enunciado);
+                p.setEnunciado(form.getEnunciado());
                 p.setTematica(tematica);
                 List<String> opciones = collectIndexedParams(paramMap, "opcion_");
                 p.setOpciones(opciones);
@@ -335,7 +356,7 @@ public class PreguntaController {
             }
             case "SELECCION_MULTIPLE" -> {
                 PreguntaSeleccionMultiple p = new PreguntaSeleccionMultiple();
-                p.setEnunciado(enunciado);
+                p.setEnunciado(form.getEnunciado());
                 p.setTematica(tematica);
                 List<String> opciones = collectIndexedParams(paramMap, "opcion_");
                 p.setOpciones(opciones);
@@ -351,30 +372,33 @@ public class PreguntaController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        var paramMap = request.getParameterMap();
-        String tipo = getParam(paramMap, "tipoPregunta");
-        String enunciado = getParam(paramMap, "enunciado");
-        String tematicaIdStr = getParam(paramMap, "tematicaId");
-        if (tematicaIdStr == null || tematicaIdStr.isBlank()) {
-            redirectAttributes.addFlashAttribute("mensaje", "Debes seleccionar una temática.");
-            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
-            return "redirect:/pregunta/formulario-pregunta";
+    public String guardar(@Valid @ModelAttribute("preguntaForm") PreguntaForm form,
+                          BindingResult result,
+                          HttpServletRequest request,
+                          Model model,
+                          RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            model.addAttribute("tematicas", preguntaService.obtenerTematicas());
+            model.addAttribute("editMode", false);
+            model.addAttribute("tipoPregunta", form.getTipoPregunta());
+            return "pregunta/formulario-pregunta";
         }
-        Long tematicaId = Long.parseLong(tematicaIdStr);
+
+        var paramMap = request.getParameterMap();
+        Long tematicaId = Long.parseLong(form.getTematicaId());
         Tematica tematica = tematicaRepository.findById(tematicaId).orElseThrow();
 
-        switch (tipo) {
+        switch (form.getTipoPregunta()) {
             case "VERDADERO_FALSO" -> {
                 PreguntaVerdaderoFalso p = new PreguntaVerdaderoFalso();
-                p.setEnunciado(enunciado);
+                p.setEnunciado(form.getEnunciado());
                 p.setTematica(tematica);
                 p.setRespuestaCorrecta(Boolean.parseBoolean(getParam(paramMap, "respuestaCorrecta")));
                 preguntaService.guardar(p);
             }
             case "SELECCION_UNICA" -> {
                 PreguntaSeleccionUnica p = new PreguntaSeleccionUnica();
-                p.setEnunciado(enunciado);
+                p.setEnunciado(form.getEnunciado());
                 p.setTematica(tematica);
                 List<String> opciones = collectIndexedParams(paramMap, "opcion_");
                 p.setOpciones(opciones);
@@ -384,7 +408,7 @@ public class PreguntaController {
             }
             case "SELECCION_MULTIPLE" -> {
                 PreguntaSeleccionMultiple p = new PreguntaSeleccionMultiple();
-                p.setEnunciado(enunciado);
+                p.setEnunciado(form.getEnunciado());
                 p.setTematica(tematica);
                 List<String> opciones = collectIndexedParams(paramMap, "opcion_");
                 p.setOpciones(opciones);

@@ -47,48 +47,50 @@
 						</div>
 
 						<form method="post" id="formPregunta" novalidate autocomplete="off"
-							th:action="${editMode ? '/pregunta/editar/' + preguntaId : '/pregunta/guardar'}">
+							th:action="${editMode ? '/pregunta/editar/' + preguntaId : '/pregunta/guardar'}"
+							th:object="${preguntaForm}">
 
 							<div class="form-row">
-								<div class="form-group">
+								<div class="form-group" th:classappend="${#fields.hasErrors('tipoPregunta')} ? 'has-error' : ''">
 									<label for="tipoPregunta" class="form-label">
 										Tipo de Pregunta <span class="required">*</span>
 									</label>
-									<input type="hidden" name="tipoPregunta" th:value="${tipoPregunta}" th:if="${editMode}">
+									<input type="hidden" name="tipoPregunta" th:value="${preguntaForm.tipoPregunta}" th:if="${editMode}">
 									<select id="tipoPregunta" class="form-select" required
 										th:disabled="${editMode}"
 										th:name="${editMode ? '_tipoPregunta_disabled' : 'tipoPregunta'}">
 										<option value="">Selecciona un tipo...</option>
 										<option value="VERDADERO_FALSO"
-											th:selected="${tipoPregunta == 'VERDADERO_FALSO'}">Verdadero / Falso
+											th:selected="${preguntaForm.tipoPregunta == 'VERDADERO_FALSO'}">Verdadero / Falso
 										</option>
 										<option value="SELECCION_UNICA"
-											th:selected="${tipoPregunta == 'SELECCION_UNICA'}">Selección Única</option>
+											th:selected="${preguntaForm.tipoPregunta == 'SELECCION_UNICA'}">Selección Única</option>
 										<option value="SELECCION_MULTIPLE"
-											th:selected="${tipoPregunta == 'SELECCION_MULTIPLE'}">Selección Múltiple
+											th:selected="${preguntaForm.tipoPregunta == 'SELECCION_MULTIPLE'}">Selección Múltiple
 										</option>
 									</select>
+									<div th:if="${#fields.hasErrors('tipoPregunta')}" class="form-error" th:errors="*{tipoPregunta}">Error</div>
 								</div>
-								<div class="form-group">
+								<div class="form-group" th:classappend="${#fields.hasErrors('tematicaId')} ? 'has-error' : ''">
 									<label for="tematicaId" class="form-label">
 										Temática <span class="required">*</span>
 									</label>
-									<select id="tematicaId" name="tematicaId" class="form-select" required>
+									<select id="tematicaId" class="form-select" th:field="*{tematicaId}">
 										<option value="">Selecciona una temática...</option>
-										<option th:each="t : ${tematicas}" th:value="${t.id}" th:text="${t.nombre}"
-											th:selected="${tematicaId != null && t.id == tematicaId}">Temática</option>
+										<option th:each="t : ${tematicas}" th:value="${t.id}" th:text="${t.nombre}">Temática</option>
 									</select>
+									<div th:if="${#fields.hasErrors('tematicaId')}" class="form-error" th:errors="*{tematicaId}">Error</div>
 								</div>
 							</div>
 
-							<div class="form-group">
+							<div class="form-group" th:classappend="${#fields.hasErrors('enunciado')} ? 'has-error' : ''">
 								<label for="enunciado" class="form-label">
 									Enunciado <span class="required">*</span>
 								</label>
-								<textarea id="enunciado" name="enunciado" class="form-textarea"
-									placeholder="Escribe el enunciado de la pregunta..." required maxlength="500"
-									th:text="${enunciado}">Escribe el enunciado de la pregunta...</textarea>
+								<textarea id="enunciado" class="form-textarea" th:field="*{enunciado}"
+									placeholder="Escribe el enunciado de la pregunta..."></textarea>
 								<div class="form-hint">Máximo 500 caracteres.</div>
+								<div th:if="${#fields.hasErrors('enunciado')}" class="form-error" th:errors="*{enunciado}">Error</div>
 							</div>
 
 							<!-- === Verdadero / Falso === -->

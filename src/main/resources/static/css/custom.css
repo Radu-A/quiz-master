@@ -1547,6 +1547,23 @@ main {
   margin-top: 0.35rem;
 }
 
+.form-error {
+  font-size: 0.78rem;
+  color: var(--accent-rose);
+  margin-top: 0.35rem;
+  font-weight: 600;
+}
+
+.form-group.has-error .form-input,
+.form-group.has-error .form-textarea,
+.form-group.has-error .form-select {
+  border-color: var(--accent-rose);
+}
+
+.form-group.has-error .form-label {
+  color: var(--accent-rose);
+}
+
 /* ── Type-specific sections ── */
 .type-section {
   display: none;

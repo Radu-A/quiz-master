@@ -85,17 +85,6 @@ tipoSelect.addEventListener('change', function() {
 
 document.getElementById('formPregunta').addEventListener('submit', function(e) {
     var tipo = tipoSelect.value;
-    var tematica = document.getElementById('tematicaId').value;
-    if (!tematica) {
-        e.preventDefault();
-        alert('Selecciona una temática.');
-        return;
-    }
-    if (!tipo) {
-        e.preventDefault();
-        alert('Selecciona un tipo de pregunta.');
-        return;
-    }
     if (tipo === 'SELECCION_UNICA') {
         var selected = document.querySelector('input[name="opcionCorrecta"]:checked');
         if (!selected) {
