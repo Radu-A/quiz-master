@@ -83,7 +83,7 @@ tipoSelect.addEventListener('change', function() {
     }
 });
 
-document.getElementById('formCrearPregunta').addEventListener('submit', function(e) {
+document.getElementById('formPregunta').addEventListener('submit', function(e) {
     var tipo = tipoSelect.value;
     var tematica = document.getElementById('tematicaId').value;
     if (!tematica) {

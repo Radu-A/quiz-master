@@ -46,18 +46,18 @@
 							<p>Todos los campos marcados con <span class="required">*</span> son obligatorios.</p>
 						</div>
 
-<form method="post"
-                            th:action="@{/pregunta/guardar}"
-                            th:unless="${editMode}"
-                            id="formCrearPregunta" novalidate autocomplete="off">
+						<form method="post" id="formPregunta" novalidate autocomplete="off"
+							th:action="${editMode ? '/pregunta/editar/' + preguntaId : '/pregunta/guardar'}">
 
 							<div class="form-row">
 								<div class="form-group">
 									<label for="tipoPregunta" class="form-label">
 										Tipo de Pregunta <span class="required">*</span>
 									</label>
-									<select id="tipoPregunta" name="tipoPregunta" class="form-select" required
-										th:disabled="${editMode}">
+									<input type="hidden" name="tipoPregunta" th:value="${tipoPregunta}" th:if="${editMode}">
+									<select id="tipoPregunta" class="form-select" required
+										th:disabled="${editMode}"
+										th:name="${editMode ? '_tipoPregunta_disabled' : 'tipoPregunta'}">
 										<option value="">Selecciona un tipo...</option>
 										<option value="VERDADERO_FALSO"
 											th:selected="${tipoPregunta == 'VERDADERO_FALSO'}">Verdadero / Falso
@@ -87,7 +87,7 @@
 								</label>
 								<textarea id="enunciado" name="enunciado" class="form-textarea"
 									placeholder="Escribe el enunciado de la pregunta..." required maxlength="500"
-									th:text="${pregunta?.enunciado}">Escribe el enunciado de la pregunta...</textarea>
+									th:text="${enunciado}">Escribe el enunciado de la pregunta...</textarea>
 								<div class="form-hint">Máximo 500 caracteres.</div>
 							</div>
 
@@ -99,14 +99,16 @@
 								</div>
 								<div class="vf-options">
 									<div class="vf-option">
-										<input type="radio" id="vfTrue" name="respuestaCorrecta" value="true">
+										<input type="radio" id="vfTrue" name="respuestaCorrecta" value="true"
+											th:checked="${respuestaCorrecta == 'true'}">
 										<label for="vfTrue" class="vf-option-label">
 											<span class="vf-option-icon icon-true">V</span>
 											Verdadero
 										</label>
 									</div>
 									<div class="vf-option">
-										<input type="radio" id="vfFalse" name="respuestaCorrecta" value="false">
+										<input type="radio" id="vfFalse" name="respuestaCorrecta" value="false"
+											th:checked="${respuestaCorrecta == 'false'}">
 										<label for="vfFalse" class="vf-option-label">
 											<span class="vf-option-icon icon-false">F</span>
 											Falso
@@ -168,15 +170,8 @@
 								</button>
 							</div>
 
-                        </form>
-
-                    <form method="post"
-                            th:action="@{/pregunta/editar/{id}(id=${preguntaId})}"
-                            th:if="${editMode}"
-                            id="formEditarPregunta" novalidate autocomplete="off">
-
-                        </form>
-                    </div>
+						</form>
+					</div>
 
 				</div>
 			</div>
@@ -184,43 +179,34 @@
 
 		<script th:src="@{/js/crear.js}"></script>
 		<script th:if="${editMode}">
-			/* Initialize form in edit mode */
 			document.addEventListener('DOMContentLoaded', function () {
-				// Set the tipoPregunta value and trigger change to show correct section
 				const tipoSelect = document.getElementById('tipoPregunta');
-				tipoSelect.value = /*[[${tipoPregunta}]]*/ 'VERDADERO_FALSO';
+				const tipoPregunta = /*[[${tipoPregunta}]]*/ '';
 
-				// Trigger change event to show correct section
 				const event = new Event('change');
 				tipoSelect.dispatchEvent(event);
 
-				// For Verdadero/Falso, set the radio button
-				if (/*[[${tipoPregunta}]]*/ '' === 'VERDADERO_FALSO') {
-					const vfValue = /*[[${respuestaCorrecta}]]*/ 'false';
-					document.getElementById('vf' + (vfValue === 'true' ? 'True' : 'False')).checked = true;
-				}
-				// For Selección Única, we need to set the radio button for correct option
-				else if (/*[[${tipoPregunta}]]*/ '' === 'SELECCION_UNICA') {
+				if (tipoPregunta === 'SELECCION_UNICA') {
 					const opciones = /*[[${opciones}]]*/[];
 					const correcta = /*[[${opcionCorrecta}]]*/ '';
-					if (opciones.length > 0 && correcta) {
-						const index = opciones.indexOf(correcta);
-						if (index >= 0) {
-							document.getElementById('radio_' + index).checked = true;
+					for (let i = 0; i < opciones.length; i++) {
+						const input = document.querySelector('input[name="opcion_' + i + '"]');
+						if (input) input.value = opciones[i];
+						if (opciones[i] === correcta) {
+							const radio = document.getElementById('radio_' + i);
+							if (radio) radio.checked = true;
 						}
 					}
-				}
-				// For Selección Múltiple, we need to set the checkboxes for correct options
-				else if (/*[[${tipoPregunta}]]*/ '' === 'SELECCION_MULTIPLE') {
+				} else if (tipoPregunta === 'SELECCION_MULTIPLE') {
 					const opciones = /*[[${opciones}]]*/[];
 					const correctas = /*[[${opcionesCorrectas}]]*/[];
-					if (opciones.length > 0) {
-						correctas.forEach(correcta => {
-							const index = opciones.indexOf(correcta);
-							if (index >= 0) {
-								document.getElementById('cb_' + index).checked = true;
-							}
-						});
+					for (let i = 0; i < opciones.length; i++) {
+						const input = document.querySelector('input[name="opcion_' + i + '"]');
+						if (input) input.value = opciones[i];
+						if (correctas.includes(opciones[i])) {
+							const cb = document.getElementById('cb_' + i);
+							if (cb) cb.checked = true;
+						}
 					}
 				}
 			});
