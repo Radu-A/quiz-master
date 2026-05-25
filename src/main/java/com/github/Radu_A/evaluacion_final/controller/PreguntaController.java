@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.github.Radu_A.evaluacion_final.dto.PreguntaForm;
 import com.github.Radu_A.evaluacion_final.dto.ResultadoEvaluacion;
 import com.github.Radu_A.evaluacion_final.dto.ResultadoQuiz;
+import com.github.Radu_A.evaluacion_final.exception.PreguntaNoEncontradaException;
 
 import jakarta.validation.Valid;
 import com.github.Radu_A.evaluacion_final.entity.Pregunta;
@@ -218,7 +219,7 @@ public class PreguntaController {
     public String editarForm(@PathVariable Long id, Model model) {
         Pregunta pregunta = preguntaService.obtenerPorId(id);
         if (pregunta == null) {
-            return "redirect:/pregunta/menu";
+            throw new PreguntaNoEncontradaException(id);
         }
 
         model.addAttribute("tematicas", preguntaService.obtenerTematicas());
