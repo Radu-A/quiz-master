@@ -189,7 +189,17 @@ public class PreguntaController {
             return "redirect:/pregunta/quiz";
         }
         return "pregunta/resultado";
-    }    @GetMapping("/formulario-pregunta")
+    }
+
+    @GetMapping("/eliminar/{id}")
+    public String eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        preguntaService.eliminar(id);
+        redirectAttributes.addFlashAttribute("mensaje", "Pregunta eliminada correctamente");
+        redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        return "redirect:/pregunta/menu";
+    }
+
+    @GetMapping("/formulario-pregunta")
     public String crearForm(Model model) {
         model.addAttribute("tematicas", preguntaService.obtenerTematicas());
         model.addAttribute("editMode", false);

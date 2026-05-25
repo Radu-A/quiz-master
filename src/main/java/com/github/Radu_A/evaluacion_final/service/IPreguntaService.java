@@ -47,4 +47,6 @@ public interface IPreguntaService {
     Pregunta guardar(Pregunta pregunta);
 
     Pregunta obtenerPorId(Long id);
+
+    void eliminar(Long id);
 }

@@ -192,6 +192,11 @@ public class PreguntaServiceImpl implements IPreguntaService {
     }
 
     @Override
+    public void eliminar(Long id) {
+        preguntaRepo.deleteById(id);
+    }
+
+    @Override
     public ResultadoQuiz evaluarQuiz(List<Pregunta> preguntas, Map<String, String[]> allParams) {
         int puntuacion = 0;
         Map<Long, Boolean> resultados = new HashMap<>();
