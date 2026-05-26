@@ -91,23 +91,61 @@ public class PreguntaRestController {
         return ResponseEntity.ok(toDto(p));
     }
 
-    @PostMapping("/preguntas")
-    @Operation(summary = "Crear pregunta", description = "Crea una nueva pregunta. El tipo se determina mediante la propiedad 'tipoPregunta' en el JSON.")
+    @PostMapping("/preguntas/verdadero-falso")
+    @Operation(summary = "Crear pregunta de verdadero/falso", description = "Crea una nueva pregunta de tipo verdadero/falso.")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Pregunta creada correctamente",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(oneOf = { PreguntaSeleccionUnicaDto.class, PreguntaSeleccionMultipleDto.class, PreguntaVerdaderoFalsoDto.class }))),
+                schema = @Schema(implementation = PreguntaVerdaderoFalsoDto.class))),
         @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
     })
-    public ResponseEntity<PreguntaDto> crearPregunta(
+    public ResponseEntity<PreguntaVerdaderoFalsoDto> crearPreguntaVerdaderoFalso(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                description = "Datos de la pregunta a crear",
+                description = "Datos de la pregunta de verdadero/falso",
                 required = true,
-                content = @Content(schema = @Schema(oneOf = { PreguntaSeleccionUnicaDto.class, PreguntaSeleccionMultipleDto.class, PreguntaVerdaderoFalsoDto.class })))
-            @RequestBody PreguntaDto dto) {
-        Pregunta entity = toEntity(dto, null);
+                content = @Content(schema = @Schema(implementation = PreguntaVerdaderoFalsoDto.class)))
+            @RequestBody PreguntaVerdaderoFalsoDto dto) {
+        Pregunta entity = toEntity(dto);
         Pregunta guardada = preguntaService.guardar(entity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(toDto(guardada));
+        return ResponseEntity.status(HttpStatus.CREATED).body((PreguntaVerdaderoFalsoDto) toDto(guardada));
+    }
+
+    @PostMapping("/preguntas/seleccion-unica")
+    @Operation(summary = "Crear pregunta de selección única", description = "Crea una nueva pregunta de tipo selección única.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Pregunta creada correctamente",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = PreguntaSeleccionUnicaDto.class))),
+        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
+    public ResponseEntity<PreguntaSeleccionUnicaDto> crearPreguntaSeleccionUnica(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Datos de la pregunta de selección única",
+                required = true,
+                content = @Content(schema = @Schema(implementation = PreguntaSeleccionUnicaDto.class)))
+            @RequestBody PreguntaSeleccionUnicaDto dto) {
+        Pregunta entity = toEntity(dto);
+        Pregunta guardada = preguntaService.guardar(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body((PreguntaSeleccionUnicaDto) toDto(guardada));
+    }
+
+    @PostMapping("/preguntas/seleccion-multiple")
+    @Operation(summary = "Crear pregunta de selección múltiple", description = "Crea una nueva pregunta de tipo selección múltiple.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Pregunta creada correctamente",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = PreguntaSeleccionMultipleDto.class))),
+        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
+    public ResponseEntity<PreguntaSeleccionMultipleDto> crearPreguntaSeleccionMultiple(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Datos de la pregunta de selección múltiple",
+                required = true,
+                content = @Content(schema = @Schema(implementation = PreguntaSeleccionMultipleDto.class)))
+            @RequestBody PreguntaSeleccionMultipleDto dto) {
+        Pregunta entity = toEntity(dto);
+        Pregunta guardada = preguntaService.guardar(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body((PreguntaSeleccionMultipleDto) toDto(guardada));
     }
 
     @PutMapping("/preguntas/{id}")
@@ -182,6 +220,38 @@ public class PreguntaRestController {
             entity.setId(id);
         }
         return entity;
+    }
+
+    private PreguntaVerdaderoFalso toEntity(PreguntaVerdaderoFalsoDto dto) {
+        Tematica tematica = tematicaRepository.findById(dto.tematicaId()).orElseThrow(
+                () -> new IllegalArgumentException("Temática no encontrada: " + dto.tematicaId()));
+        PreguntaVerdaderoFalso p = new PreguntaVerdaderoFalso();
+        p.setEnunciado(dto.enunciado());
+        p.setTematica(tematica);
+        p.setRespuestaCorrecta(dto.respuestaCorrecta());
+        return p;
+    }
+
+    private PreguntaSeleccionUnica toEntity(PreguntaSeleccionUnicaDto dto) {
+        Tematica tematica = tematicaRepository.findById(dto.tematicaId()).orElseThrow(
+                () -> new IllegalArgumentException("Temática no encontrada: " + dto.tematicaId()));
+        PreguntaSeleccionUnica p = new PreguntaSeleccionUnica();
+        p.setEnunciado(dto.enunciado());
+        p.setTematica(tematica);
+        p.setOpciones(dto.opciones());
+        p.setOpcionCorrecta(dto.opcionCorrecta());
+        return p;
+    }
+
+    private PreguntaSeleccionMultiple toEntity(PreguntaSeleccionMultipleDto dto) {
+        Tematica tematica = tematicaRepository.findById(dto.tematicaId()).orElseThrow(
+                () -> new IllegalArgumentException("Temática no encontrada: " + dto.tematicaId()));
+        PreguntaSeleccionMultiple p = new PreguntaSeleccionMultiple();
+        p.setEnunciado(dto.enunciado());
+        p.setTematica(tematica);
+        p.setOpciones(dto.opciones());
+        p.setOpcionesCorrectas(dto.opcionesCorrectas());
+        return p;
     }
 
     private PreguntaDto toDto(Pregunta p) {
