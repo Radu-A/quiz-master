@@ -151,28 +151,79 @@ public class PreguntaRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body((PreguntaSeleccionMultipleDto) toDto(guardada));
     }
 
-    @PutMapping("/preguntas/{id}")
-    @Operation(summary = "Actualizar pregunta", description = "Actualiza una pregunta existente por su ID.")
+    @PutMapping("/preguntas/{id}/verdadero-falso")
+    @Operation(summary = "Actualizar pregunta de verdadero/falso", description = "Actualiza una pregunta existente de tipo verdadero/falso por su ID.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Pregunta actualizada correctamente",
             content = @Content(mediaType = "application/json",
-                schema = @Schema(oneOf = { PreguntaSeleccionUnicaDto.class, PreguntaSeleccionMultipleDto.class, PreguntaVerdaderoFalsoDto.class }))),
+                schema = @Schema(implementation = PreguntaVerdaderoFalsoDto.class))),
         @ApiResponse(responseCode = "404", description = "Pregunta no encontrada"),
         @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
     })
-    public ResponseEntity<PreguntaDto> actualizarPregunta(
+    public ResponseEntity<PreguntaVerdaderoFalsoDto> actualizarPreguntaVerdaderoFalso(
             @Parameter(description = "ID de la pregunta a actualizar") @PathVariable Long id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Datos actualizados de la pregunta",
                 required = true,
-                content = @Content(schema = @Schema(oneOf = { PreguntaSeleccionUnicaDto.class, PreguntaSeleccionMultipleDto.class, PreguntaVerdaderoFalsoDto.class })))
-            @RequestBody PreguntaDto dto) {
+                content = @Content(schema = @Schema(implementation = PreguntaVerdaderoFalsoRequest.class)))
+            @RequestBody PreguntaVerdaderoFalsoRequest dto) {
         if (preguntaService.obtenerPorId(id) == null) {
             return ResponseEntity.notFound().build();
         }
-        Pregunta entity = toEntity(dto, id);
+        PreguntaVerdaderoFalso entity = toEntity(dto);
+        entity.setId(id);
         Pregunta guardada = preguntaService.guardar(entity);
-        return ResponseEntity.ok(toDto(guardada));
+        return ResponseEntity.ok((PreguntaVerdaderoFalsoDto) toDto(guardada));
+    }
+
+    @PutMapping("/preguntas/{id}/seleccion-unica")
+    @Operation(summary = "Actualizar pregunta de selección única", description = "Actualiza una pregunta existente de tipo selección única por su ID.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Pregunta actualizada correctamente",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = PreguntaSeleccionUnicaDto.class))),
+        @ApiResponse(responseCode = "404", description = "Pregunta no encontrada"),
+        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
+    public ResponseEntity<PreguntaSeleccionUnicaDto> actualizarPreguntaSeleccionUnica(
+            @Parameter(description = "ID de la pregunta a actualizar") @PathVariable Long id,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Datos actualizados de la pregunta",
+                required = true,
+                content = @Content(schema = @Schema(implementation = PreguntaSeleccionUnicaRequest.class)))
+            @RequestBody PreguntaSeleccionUnicaRequest dto) {
+        if (preguntaService.obtenerPorId(id) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        PreguntaSeleccionUnica entity = toEntity(dto);
+        entity.setId(id);
+        Pregunta guardada = preguntaService.guardar(entity);
+        return ResponseEntity.ok((PreguntaSeleccionUnicaDto) toDto(guardada));
+    }
+
+    @PutMapping("/preguntas/{id}/seleccion-multiple")
+    @Operation(summary = "Actualizar pregunta de selección múltiple", description = "Actualiza una pregunta existente de tipo selección múltiple por su ID.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Pregunta actualizada correctamente",
+            content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = PreguntaSeleccionMultipleDto.class))),
+        @ApiResponse(responseCode = "404", description = "Pregunta no encontrada"),
+        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
+    public ResponseEntity<PreguntaSeleccionMultipleDto> actualizarPreguntaSeleccionMultiple(
+            @Parameter(description = "ID de la pregunta a actualizar") @PathVariable Long id,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "Datos actualizados de la pregunta",
+                required = true,
+                content = @Content(schema = @Schema(implementation = PreguntaSeleccionMultipleRequest.class)))
+            @RequestBody PreguntaSeleccionMultipleRequest dto) {
+        if (preguntaService.obtenerPorId(id) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        PreguntaSeleccionMultiple entity = toEntity(dto);
+        entity.setId(id);
+        Pregunta guardada = preguntaService.guardar(entity);
+        return ResponseEntity.ok((PreguntaSeleccionMultipleDto) toDto(guardada));
     }
 
     @DeleteMapping("/preguntas/{id}")
@@ -188,41 +239,6 @@ public class PreguntaRestController {
         }
         preguntaService.eliminar(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private Pregunta toEntity(PreguntaDto dto, Long id) {
-        Tematica tematica = tematicaRepository.findById(dto.tematicaId()).orElseThrow(
-                () -> new IllegalArgumentException("Temática no encontrada: " + dto.tematicaId()));
-
-        Pregunta entity;
-        if (dto instanceof PreguntaSeleccionUnicaDto su) {
-            PreguntaSeleccionUnica p = new PreguntaSeleccionUnica();
-            p.setEnunciado(su.enunciado());
-            p.setTematica(tematica);
-            p.setOpciones(su.opciones());
-            p.setOpcionesCorrectas(su.opcionesCorrectas());
-            entity = p;
-        } else if (dto instanceof PreguntaSeleccionMultipleDto sm) {
-            PreguntaSeleccionMultiple p = new PreguntaSeleccionMultiple();
-            p.setEnunciado(sm.enunciado());
-            p.setTematica(tematica);
-            p.setOpciones(sm.opciones());
-            p.setOpcionesCorrectas(sm.opcionesCorrectas());
-            entity = p;
-        } else if (dto instanceof PreguntaVerdaderoFalsoDto vf) {
-            PreguntaVerdaderoFalso p = new PreguntaVerdaderoFalso();
-            p.setEnunciado(vf.enunciado());
-            p.setTematica(tematica);
-            p.setRespuestaCorrecta(vf.respuestaCorrecta());
-            entity = p;
-        } else {
-            throw new IllegalArgumentException("Tipo de DTO desconocido: " + dto.getClass());
-        }
-
-        if (id != null) {
-            entity.setId(id);
-        }
-        return entity;
     }
 
     private PreguntaVerdaderoFalso toEntity(PreguntaVerdaderoFalsoRequest dto) {
