@@ -28,8 +28,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import com.github.Radu_A.evaluacion_final.dto.PreguntaSeleccionMultipleDto;
+import com.github.Radu_A.evaluacion_final.dto.PreguntaSeleccionMultipleRequest;
 import com.github.Radu_A.evaluacion_final.dto.PreguntaSeleccionUnicaDto;
+import com.github.Radu_A.evaluacion_final.dto.PreguntaSeleccionUnicaRequest;
 import com.github.Radu_A.evaluacion_final.dto.PreguntaVerdaderoFalsoDto;
+import com.github.Radu_A.evaluacion_final.dto.PreguntaVerdaderoFalsoRequest;
 import com.github.Radu_A.evaluacion_final.entity.Pregunta;
 import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionMultiple;
 import com.github.Radu_A.evaluacion_final.entity.PreguntaSeleccionUnica;
@@ -103,8 +106,8 @@ public class PreguntaRestController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Datos de la pregunta de verdadero/falso",
                 required = true,
-                content = @Content(schema = @Schema(implementation = PreguntaVerdaderoFalsoDto.class)))
-            @RequestBody PreguntaVerdaderoFalsoDto dto) {
+                content = @Content(schema = @Schema(implementation = PreguntaVerdaderoFalsoRequest.class)))
+            @RequestBody PreguntaVerdaderoFalsoRequest dto) {
         Pregunta entity = toEntity(dto);
         Pregunta guardada = preguntaService.guardar(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body((PreguntaVerdaderoFalsoDto) toDto(guardada));
@@ -122,8 +125,8 @@ public class PreguntaRestController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Datos de la pregunta de selección única",
                 required = true,
-                content = @Content(schema = @Schema(implementation = PreguntaSeleccionUnicaDto.class)))
-            @RequestBody PreguntaSeleccionUnicaDto dto) {
+                content = @Content(schema = @Schema(implementation = PreguntaSeleccionUnicaRequest.class)))
+            @RequestBody PreguntaSeleccionUnicaRequest dto) {
         Pregunta entity = toEntity(dto);
         Pregunta guardada = preguntaService.guardar(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body((PreguntaSeleccionUnicaDto) toDto(guardada));
@@ -141,8 +144,8 @@ public class PreguntaRestController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                 description = "Datos de la pregunta de selección múltiple",
                 required = true,
-                content = @Content(schema = @Schema(implementation = PreguntaSeleccionMultipleDto.class)))
-            @RequestBody PreguntaSeleccionMultipleDto dto) {
+                content = @Content(schema = @Schema(implementation = PreguntaSeleccionMultipleRequest.class)))
+            @RequestBody PreguntaSeleccionMultipleRequest dto) {
         Pregunta entity = toEntity(dto);
         Pregunta guardada = preguntaService.guardar(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body((PreguntaSeleccionMultipleDto) toDto(guardada));
@@ -222,7 +225,7 @@ public class PreguntaRestController {
         return entity;
     }
 
-    private PreguntaVerdaderoFalso toEntity(PreguntaVerdaderoFalsoDto dto) {
+    private PreguntaVerdaderoFalso toEntity(PreguntaVerdaderoFalsoRequest dto) {
         Tematica tematica = tematicaRepository.findById(dto.tematicaId()).orElseThrow(
                 () -> new IllegalArgumentException("Temática no encontrada: " + dto.tematicaId()));
         PreguntaVerdaderoFalso p = new PreguntaVerdaderoFalso();
@@ -232,7 +235,7 @@ public class PreguntaRestController {
         return p;
     }
 
-    private PreguntaSeleccionUnica toEntity(PreguntaSeleccionUnicaDto dto) {
+    private PreguntaSeleccionUnica toEntity(PreguntaSeleccionUnicaRequest dto) {
         Tematica tematica = tematicaRepository.findById(dto.tematicaId()).orElseThrow(
                 () -> new IllegalArgumentException("Temática no encontrada: " + dto.tematicaId()));
         PreguntaSeleccionUnica p = new PreguntaSeleccionUnica();
@@ -243,7 +246,7 @@ public class PreguntaRestController {
         return p;
     }
 
-    private PreguntaSeleccionMultiple toEntity(PreguntaSeleccionMultipleDto dto) {
+    private PreguntaSeleccionMultiple toEntity(PreguntaSeleccionMultipleRequest dto) {
         Tematica tematica = tematicaRepository.findById(dto.tematicaId()).orElseThrow(
                 () -> new IllegalArgumentException("Temática no encontrada: " + dto.tematicaId()));
         PreguntaSeleccionMultiple p = new PreguntaSeleccionMultiple();
