@@ -73,11 +73,11 @@
                     <p class="quiz-card-question" th:text="${pregunta.enunciado}">Enunciado aquí</p>
                     <div class="quiz-options readonly">
                         <div th:each="opcion : ${pregunta.opciones}" class="quiz-option"
-                             th:classappend="${opcion == pregunta.opcionCorrecta ? 'quiz-option-correct' : (respuestasUsuario[pregunta.id] != null && respuestasUsuario[pregunta.id] == opcion && opcion != pregunta.opcionCorrecta ? 'quiz-option-incorrect' : '')}">
+                             th:classappend="${pregunta.opcionesCorrectas.contains(opcion) ? 'quiz-option-correct' : (respuestasUsuario[pregunta.id] != null && respuestasUsuario[pregunta.id] == opcion && !pregunta.opcionesCorrectas.contains(opcion) ? 'quiz-option-incorrect' : '')}">
                             <span class="quiz-option-marker quiz-option-marker-su" th:text="${#strings.substring(opcion, 0, 1)}">A</span>
                             <span class="quiz-option-text" th:text="${opcion}">Opción</span>
-                            <span class="quiz-option-badge" th:if="${opcion == pregunta.opcionCorrecta}">Correcta</span>
-                            <span class="quiz-option-badge badge-wrong" th:if="${respuestasUsuario[pregunta.id] != null && respuestasUsuario[pregunta.id] == opcion && opcion != pregunta.opcionCorrecta}">Tu respuesta</span>
+                            <span class="quiz-option-badge" th:if="${pregunta.opcionesCorrectas.contains(opcion)}">Correcta</span>
+                            <span class="quiz-option-badge badge-wrong" th:if="${respuestasUsuario[pregunta.id] != null && respuestasUsuario[pregunta.id] == opcion && !pregunta.opcionesCorrectas.contains(opcion)}">Tu respuesta</span>
                         </div>
                     </div>
                 </div>

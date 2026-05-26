@@ -143,7 +143,7 @@ public class PreguntaServiceImpl implements IPreguntaService {
             String key = "r_" + p.getId();
             if (parametros.containsKey(key)) {
                 String resp = parametros.get(key);
-                boolean correcta = p.getOpcionCorrecta().equals(resp);
+                boolean correcta = p.getOpcionesCorrectas().get(0).equals(resp);
                 resultados.put(p.getId(), correcta);
                 respuestasUsuario.put(p.getId(), resp);
                 if (correcta) puntuacion++;
@@ -213,7 +213,7 @@ public class PreguntaServiceImpl implements IPreguntaService {
             } else if (p instanceof PreguntaSeleccionUnica su) {
                 if (allParams.containsKey(key)) {
                     String resp = allParams.get(key)[0];
-                    correcta = su.getOpcionCorrecta().equals(resp);
+                    correcta = su.getOpcionesCorrectas().get(0).equals(resp);
                 }
             } else if (p instanceof PreguntaSeleccionMultiple sm) {
                 String[] valores = allParams.get(key);

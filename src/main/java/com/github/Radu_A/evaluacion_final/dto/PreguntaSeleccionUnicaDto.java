@@ -8,6 +8,6 @@ public record PreguntaSeleccionUnicaDto(
     String enunciado,
     Long tematicaId,
     List<String> opciones,
-    String opcionCorrecta
+    List<String> opcionesCorrectas
 ) implements PreguntaDto {
 }

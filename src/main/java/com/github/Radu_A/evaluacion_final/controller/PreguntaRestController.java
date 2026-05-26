@@ -197,7 +197,7 @@ public class PreguntaRestController {
             p.setEnunciado(su.enunciado());
             p.setTematica(tematica);
             p.setOpciones(su.opciones());
-            p.setOpcionCorrecta(su.opcionCorrecta());
+            p.setOpcionesCorrectas(su.opcionesCorrectas());
             entity = p;
         } else if (dto instanceof PreguntaSeleccionMultipleDto sm) {
             PreguntaSeleccionMultiple p = new PreguntaSeleccionMultiple();
@@ -239,7 +239,7 @@ public class PreguntaRestController {
         p.setEnunciado(dto.enunciado());
         p.setTematica(tematica);
         p.setOpciones(dto.opciones());
-        p.setOpcionCorrecta(dto.opcionCorrecta());
+        p.setOpcionesCorrectas(dto.opcionesCorrectas());
         return p;
     }
 
@@ -263,7 +263,7 @@ public class PreguntaRestController {
         if (p instanceof PreguntaSeleccionUnica su) {
             return new PreguntaSeleccionUnicaDto(
                     su.getId(), su.getEnunciado(), su.getTematica().getId(),
-                    su.getOpciones(), su.getOpcionCorrecta());
+                    su.getOpciones(), su.getOpcionesCorrectas());
         }
         if (p instanceof PreguntaSeleccionMultiple sm) {
             return new PreguntaSeleccionMultipleDto(

@@ -136,7 +136,7 @@
                                         <th:block th:if="${isSU}">
                                             <span th:each="opcion, iterStat : ${pregunta.opciones}"
                                                   class="option-tag"
-                                                  th:classappend="${opcion == pregunta.opcionCorrecta ? 'option-tag-correct' : ''}"
+                                                  th:classappend="${pregunta.opcionesCorrectas.contains(opcion) ? 'option-tag-correct' : ''}"
                                                   th:text="${opcion}">Opción</span>
                                         </th:block>
                                         <th:block th:if="${isSM}">

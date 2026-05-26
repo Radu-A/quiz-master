@@ -64,10 +64,10 @@
                     <!-- Selección Única -->
                     <div th:if="${pregunta.class.simpleName == 'PreguntaSeleccionUnica'}" class="quiz-options readonly">
                         <div th:each="opcion : ${pregunta.opciones}" class="quiz-option"
-                             th:classappend="${opcion == pregunta.opcionCorrecta} ? 'quiz-option-correct' : ''">
+                             th:classappend="${pregunta.opcionesCorrectas.contains(opcion)} ? 'quiz-option-correct' : ''">
                             <span class="quiz-option-marker quiz-option-marker-su" th:text="${#strings.substring(opcion, 0, 1)}">A</span>
                             <span class="quiz-option-text" th:text="${opcion}">Opción</span>
-                            <span class="quiz-option-badge" th:if="${opcion == pregunta.opcionCorrecta}">Correcta</span>
+                            <span class="quiz-option-badge" th:if="${pregunta.opcionesCorrectas.contains(opcion)}">Correcta</span>
                         </div>
                     </div>
 

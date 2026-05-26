@@ -234,7 +234,8 @@ public class PreguntaController {
             tipoPregunta = "SELECCION_UNICA";
             PreguntaSeleccionUnica su = (PreguntaSeleccionUnica) pregunta;
             model.addAttribute("opciones", su.getOpciones());
-            model.addAttribute("opcionCorrecta", su.getOpcionCorrecta());
+            var correctas = su.getOpcionesCorrectas();
+            model.addAttribute("opcionCorrecta", correctas != null && !correctas.isEmpty() ? correctas.get(0) : "");
         } else if (pregunta instanceof PreguntaSeleccionMultiple) {
             tipoPregunta = "SELECCION_MULTIPLE";
             PreguntaSeleccionMultiple sm = (PreguntaSeleccionMultiple) pregunta;
@@ -300,7 +301,7 @@ public class PreguntaController {
                 List<String> opciones = collectIndexedParams(paramMap, "opcion_");
                 p.setOpciones(opciones);
                 int correctaIdx = Integer.parseInt(getParam(paramMap, "opcionCorrecta"));
-                p.setOpcionCorrecta(opciones.get(correctaIdx));
+                p.setOpcionesCorrectas(List.of(opciones.get(correctaIdx)));
                 preguntaService.guardar(p);
             }
             case "SELECCION_MULTIPLE" -> {
@@ -352,7 +353,7 @@ public class PreguntaController {
                 List<String> opciones = collectIndexedParams(paramMap, "opcion_");
                 p.setOpciones(opciones);
                 int correctaIdx = Integer.parseInt(getParam(paramMap, "opcionCorrecta"));
-                p.setOpcionCorrecta(opciones.get(correctaIdx));
+                p.setOpcionesCorrectas(List.of(opciones.get(correctaIdx)));
                 preguntaService.guardar(p);
             }
             case "SELECCION_MULTIPLE" -> {
@@ -404,7 +405,7 @@ public class PreguntaController {
                 List<String> opciones = collectIndexedParams(paramMap, "opcion_");
                 p.setOpciones(opciones);
                 int correctaIdx = Integer.parseInt(getParam(paramMap, "opcionCorrecta"));
-                p.setOpcionCorrecta(opciones.get(correctaIdx));
+                p.setOpcionesCorrectas(List.of(opciones.get(correctaIdx)));
                 preguntaService.guardar(p);
             }
             case "SELECCION_MULTIPLE" -> {
