@@ -491,3 +491,19 @@ INSERT INTO respuestas_correctas (pregunta_id, respuesta_correcta) VALUES (75, '
 -- Reset identity sequences for future inserts
 ALTER TABLE tematicas ALTER COLUMN id RESTART WITH 6;
 ALTER TABLE preguntas ALTER COLUMN id RESTART WITH 76;
+
+-- ============================================================
+-- SEGURIDAD: ROLES Y USUARIOS (contraseñas hasheadas con BCrypt)
+-- ============================================================
+INSERT INTO roles (nombre) VALUES ('ROLE_ADMIN');
+INSERT INTO roles (nombre) VALUES ('ROLE_USER');
+
+INSERT INTO usuarios (username, password, email, enabled) VALUES ('admin', '$2a$10$zSogB7TH/NggiaQQ.2OHz.ehYkuDxkxeeBVZ4uJlzrsLb7ObK1a92', 'admin@ejemplo.com', true);
+
+INSERT INTO usuarios (username, password, email, enabled) VALUES ('user', '$2a$10$2IUXb6X7PsBoB3GAMSdAHebi7S4IP4wYI0N1n5RuqWJraZvDx4GUq', 'user@ejemplo.com', true);
+
+-- admin tiene ROLE_ADMIN (id=1) y ROLE_USER (id=2)
+INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (1, 1);
+INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (1, 2);
+-- user solo tiene ROLE_USER (id=2)
+INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (2, 2);
