@@ -25,6 +25,7 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarContent">
 				<ul class="navbar-nav ms-auto gap-2">
+					<!-- Se renderiza solamente para usuarios con lo ROLE_ADMIN -->
 					<li class="nav-item" sec:authorize="hasRole('ADMIN')">
 						<a class="nav-link" th:href="@{/pregunta/menu}">
 							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.github.Radu_A.evaluacion_final.dto.PreguntaDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,6 +96,7 @@ public class PreguntaRestController {
     }
 
     @PostMapping("/preguntas/verdadero-falso")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Crear pregunta de verdadero/falso", description = "Crea una nueva pregunta de tipo verdadero/falso.")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Pregunta creada correctamente",
@@ -114,6 +116,7 @@ public class PreguntaRestController {
     }
 
     @PostMapping("/preguntas/seleccion-unica")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Crear pregunta de selección única", description = "Crea una nueva pregunta de tipo selección única.")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Pregunta creada correctamente",
@@ -133,6 +136,7 @@ public class PreguntaRestController {
     }
 
     @PostMapping("/preguntas/seleccion-multiple")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Crear pregunta de selección múltiple", description = "Crea una nueva pregunta de tipo selección múltiple.")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Pregunta creada correctamente",
@@ -152,6 +156,7 @@ public class PreguntaRestController {
     }
 
     @PutMapping("/preguntas/{id}/verdadero-falso")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Actualizar pregunta de verdadero/falso", description = "Actualiza una pregunta existente de tipo verdadero/falso por su ID.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Pregunta actualizada correctamente",
@@ -177,6 +182,7 @@ public class PreguntaRestController {
     }
 
     @PutMapping("/preguntas/{id}/seleccion-unica")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Actualizar pregunta de selección única", description = "Actualiza una pregunta existente de tipo selección única por su ID.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Pregunta actualizada correctamente",
@@ -202,6 +208,7 @@ public class PreguntaRestController {
     }
 
     @PutMapping("/preguntas/{id}/seleccion-multiple")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Actualizar pregunta de selección múltiple", description = "Actualiza una pregunta existente de tipo selección múltiple por su ID.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Pregunta actualizada correctamente",
@@ -227,6 +234,7 @@ public class PreguntaRestController {
     }
 
     @DeleteMapping("/preguntas/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Eliminar pregunta", description = "Elimina una pregunta por su ID.")
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Pregunta eliminada correctamente"),
