@@ -1,47 +1,104 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::section})}">
 <head>
-<meta charset="UTF-8">
-<title>Iniciar sesión</title>
+    <title>Iniciar sesión &mdash; QuizMaster</title>
 </head>
 <body>
-    <h1>Iniciar sesión</h1>
 
-    <!-- Spring Security pone el parámetro "error" en la URL cuando fallan las credenciales. -->
-    <div th:if="${param.error}">
-        <p style="color:red;">Usuario o contraseña incorrectos. Vuelve a intentarlo.</p>
+<section>
+
+    <div class="login-hero">
+        <div class="container">
+            <div class="login-wrapper">
+                <div class="login-card">
+
+                    <div class="login-header">
+                        <div class="login-brand">
+                            <span class="brand-icon">&#9679;</span>
+                            <span>QuizMaster</span>
+                        </div>
+                        <h1>Iniciar sesión</h1>
+                        <p>Accede a tu cuenta para continuar.</p>
+                    </div>
+
+                    <div th:if="${param.error}" class="alert alert-error">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <span>Usuario o contraseña incorrectos. Vuelve a intentarlo.</span>
+                    </div>
+
+                    <div th:if="${param.logout}" class="alert alert-success">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        <span>Has cerrado sesión correctamente.</span>
+                    </div>
+
+                    <form th:action="@{/login}" method="post" class="login-form">
+                        <div class="form-group">
+                            <label class="form-label" for="username">Usuario</label>
+                            <div class="input-icon-wrap">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="input-icon">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <input type="text" id="username" name="username" class="form-input login-input" placeholder="Introduce tu usuario" required autofocus />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="password">Contraseña</label>
+                            <div class="input-icon-wrap">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="input-icon">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                <input type="password" id="password" name="password" class="form-input login-input" placeholder="Introduce tu contraseña" required />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-login">
+                            Entrar
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </form>
+
+                    <div class="login-footer">
+                        <p class="login-hint">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4"/>
+                                <path d="M12 8h.01"/>
+                            </svg>
+                            Usuarios de prueba:
+                        </p>
+                        <div class="login-creds">
+                            <span class="cred-chip">
+                                <strong>admin</strong> / admin123
+                            </span>
+                            <span class="cred-chip cred-admin">ROLE_ADMIN + ROLE_USER</span>
+                        </div>
+                        <div class="login-creds">
+                            <span class="cred-chip">
+                                <strong>user</strong> / user123
+                            </span>
+                            <span class="cred-chip cred-user">ROLE_USER</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- El parámetro "logout" aparece tras cerrar sesión correctamente. -->
-    <div th:if="${param.logout}">
-        <p style="color:green;">Has cerrado sesión correctamente.</p>
-    </div>
+</section>
 
-    <!--
-      Spring Security intercepta el POST /login automáticamente.
-      Los campos DEBEN llamarse "username" y "password".
-      th:action="@{/login}" genera la URL con el context path correcto.
-      El token CSRF lo inserta Thymeleaf automáticamente como campo oculto.
-    -->
-    <form th:action="@{/login}" method="post">
-        <div>
-            <label for="username">Usuario:</label>
-            <input type="text" id="username" name="username" required autofocus />
-        </div>
-        <div>
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required />
-        </div>
-        <div>
-            <button type="submit">Entrar</button>
-        </div>
-    </form>
-
-    <hr/>
-    <small>
-        Usuarios de prueba:
-        <strong>admin</strong> / admin123 (ROLE_ADMIN + ROLE_USER) |
-        <strong>user</strong> / user123 (ROLE_USER)
-    </small>
 </body>
 </html>

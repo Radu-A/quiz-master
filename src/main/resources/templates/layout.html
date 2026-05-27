@@ -1,87 +1,95 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
-      th:fragment="layout(title, content)">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:replace="${title}">Quiz App</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/custom.css}">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title th:replace="${title}">Quiz App</title>
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/css/custom.css}">
 </head>
+
 <body>
 
-    <!-- ===== NAVBAR ===== -->
-    <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand" th:href="@{/}">
-                <span class="brand-icon">&#9679;</span>
-                QuizMaster
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarContent" aria-controls="navbarContent"
-                    aria-expanded="false" aria-label="Alternar navegación">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" th:href="@{/}">Inicio</a>
-                    </li>
-                    <!-- Dropdown Quiz -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="quizDropdown"
-                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Quizzes
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quizDropdown">
-                            <li>
-                                <a class="dropdown-item" th:href="@{/pregunta/quiz}">
-                                    <span style="color: var(--accent-blue); font-weight: 700;">&#9733;</span>
-                                    Desafío Total
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li th:each="t : ${tematicas}">
-                                <a class="dropdown-item" th:href="@{/pregunta/quiz(tematicaId=${t.slug})}"
-                                   th:style="'--item-color:' + ${t.color}">
-                                    <span class="dropdown-item-icon" th:replace="~{fragments/icon :: icon(${t.icono}, 18)}"></span>
-                                    <span th:text="${t.nombre}">Temática</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/pregunta/menu}">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:0.3rem;vertical-align:-2px;">
-                                <circle cx="12" cy="12" r="3"/>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                            </svg>
-                            Panel de Administración
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+	<!-- ===== NAVBAR ===== -->
+	<nav class="navbar navbar-expand-lg sticky-top">
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/}">
+				<span class="brand-icon">&#9679;</span>
+				QuizMaster
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+				aria-controls="navbarContent" aria-expanded="false" aria-label="Alternar navegación">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarContent">
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/pregunta/menu}">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+								stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+								style="margin-right:0.3rem;vertical-align:-2px;">
+								<circle cx="12" cy="12" r="3" />
+								<path
+									d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+							</svg>
+							Panel de Administración
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" th:href="@{/}">Inicio</a>
+					</li>
+					<!-- Dropdown Quiz -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="quizDropdown" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							Quizzes
+						</a>
+						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quizDropdown">
+							<li>
+								<a class="dropdown-item" th:href="@{/pregunta/quiz}">
+									<span style="color: var(--accent-blue); font-weight: 700;">&#9733;</span>
+									Desafío Total
+								</a>
+							</li>
+							<li>
+								<hr class="dropdown-divider">
+							</li>
+							<li th:each="t : ${tematicas}">
+								<a class="dropdown-item" th:href="@{/pregunta/quiz(tematicaId=${t.slug})}"
+									th:style="'--item-color:' + ${t.color}">
+									<span class="dropdown-item-icon"
+										th:replace="~{fragments/icon :: icon(${t.icono}, 18)}"></span>
+									<span th:text="${t.nombre}">Temática</span>
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <main>
-        <th:block th:replace="${content}" />
-    </main>
+	<!-- ===== MAIN CONTENT ===== -->
+	<main>
+		<th:block th:replace="${content}" />
+	</main>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="footer">
-        <div class="container">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-                <span>&copy; 2026 <strong style="color: rgba(255,255,255,0.85);">QuizMaster</strong>. Todos los derechos reservados.</span>
-                <div class="d-flex gap-3">
-                    <a th:href="@{/}">Inicio</a>
-                    <a th:href="@{/pregunta/quiz}">Desafío Total</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+	<!-- ===== FOOTER ===== -->
+	<footer class="footer">
+		<div class="container">
+			<div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+				<span>&copy; 2026 <strong style="color: rgba(255,255,255,0.85);">QuizMaster</strong>. Todos los derechos
+					reservados.</span>
+				<div class="d-flex gap-3">
+					<a th:href="@{/}">Inicio</a>
+					<a th:href="@{/pregunta/quiz}">Desafío Total</a>
+				</div>
+			</div>
+		</div>
+	</footer>
 
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
+
 </html>
