@@ -30,7 +30,7 @@
                         <a th:href="@{#cards-section}" class="btn btn-hero btn-hero-outline">
                             Explorar quizzes
                         </a>
-                        <a th:href="@{/pregunta/menu}" class="btn btn-hero btn-hero-outline">
+                        <a th:href="@{/pregunta/menu}" class="btn btn-hero btn-hero-outline" sec:authorize="hasRole('ADMIN')">
                             Panel de Administración
                         </a>
                     </div>

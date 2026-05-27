@@ -1,17 +1,134 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<meta charset="UTF-8">
-<title>Acceso denegado</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso denegado &mdash; QuizMaster</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
+    <style>
+        .error-hero {
+            background: linear-gradient(160deg, var(--primary-deep) 0%, #1e1b4b 30%, #312e81 60%, #4338ca 100%);
+            padding: 6rem 0 5rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        .error-hero::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -20%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .error-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -15%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .error-hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .error-code {
+            font-size: clamp(5rem, 12vw, 9rem);
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--accent-rose), var(--accent-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.04em;
+        }
+        .error-hero h1 {
+            font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        .error-hero p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.65);
+            max-width: 480px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+        .btn-error {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 2.25rem;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: var(--radius-lg, 1rem);
+            background: linear-gradient(135deg, var(--accent-rose), var(--accent-amber));
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.35);
+            border: none;
+        }
+        .btn-error:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(244, 63, 94, 0.5);
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-    <h1>403 — Acceso denegado</h1>
-    <p>
-        El usuario <strong sec:authentication="name"></strong>
-        no tiene permisos para acceder a esta sección.
-    </p>
-    <p>Esta acción requiere el rol <strong>ADMIN</strong>.</p>
-    <a th:href="@{/}">← Volver al inicio</a>
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <span class="brand-icon">&#9679;</span>
+                QuizMaster
+            </a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="error-hero">
+            <div class="container error-hero-content">
+                <div class="error-code">403</div>
+                <h1>Acceso denegado</h1>
+                <p>
+                    El usuario <strong style="color:rgba(255,255,255,0.9);" sec:authentication="name"></strong>
+                    no tiene permisos para acceder a esta secci&oacute;n.
+                    <br>
+                    Esta acci&oacute;n requiere el rol <strong style="color:rgba(255,255,255,0.9);">ADMIN</strong>.
+                </p>
+                <a class="btn-error" th:href="@{/}">
+                    &larr; Volver al inicio
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+                <span>&copy; 2026 <strong style="color: rgba(255,255,255,0.85);">QuizMaster</strong>. Todos los derechos reservados.</span>
+                <div class="d-flex gap-3">
+                    <a th:href="@{/}">Inicio</a>
+                    <a th:href="@{/pregunta/quiz}">Desafío Combinado</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
