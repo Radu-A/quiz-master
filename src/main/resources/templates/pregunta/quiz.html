@@ -3,14 +3,14 @@
       th:replace="~{layout :: layout(~{::title}, ~{::section})}">
 <head>
     <title th:if="${tematica != null}" th:text="'Desafío: ' + ${tematica.nombre} + ' — QuizMaster'">Desafío — QuizMaster</title>
-    <title th:if="${tematica == null}">Desafío General — QuizMaster</title>
+    <title th:if="${tematica == null}">Desafío Combinado — QuizMaster</title>
 </head>
 <body>
 
 <section>
     <div class="quiz-hero quiz-hero-desafio">
         <div class="container text-center">
-            <span class="badge-pill">Desafío Mixto</span>
+            <span class="badge-pill">Desafío Combinado</span>
             <h1>Desafío <span class="highlight">Combinado</span></h1>
             <p th:if="${tematica != null}" th:text="'Temática: ' + ${tematica.nombre}">Temática</p>
             <p th:if="${tematica == null}">Todas las temáticas combinadas</p>

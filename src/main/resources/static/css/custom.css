@@ -411,7 +411,7 @@ main {
   box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);
 }
 
-/* ── Card Desafío Total ── */
+/* ── Card Desafío Combinado ── */
 .card-quiz.card-desafio::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); }
 .card-quiz.card-desafio .card-icon { background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1)); color: var(--accent-purple); }
 .card-quiz.card-desafio .btn-card {
