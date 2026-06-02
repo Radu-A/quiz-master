@@ -4,6 +4,16 @@ Quiz Master es una robusta API REST y plataforma web monolítica desarrollada co
 
 ---
 
+## 📸 Vista Previa del Proyecto
+
+![Pantalla de Inicio](static/screenshots/panel.png)
+
+---
+
+![Panel de Gestión](static/screenshots/quiz.png)
+
+---
+
 ## 🚀 Características Clave
 
 * **Temáticas con Identidad Propia:** El juego no es un trivial genérico. Cuenta con un sistema de categorías dinámicas con descripciones, colores de interfaz (`color`) e iconos (`icono`) únicos guardados en base de datos.
