@@ -6,11 +6,11 @@ Quiz Master es una robusta API REST y plataforma web monolítica desarrollada co
 
 ## 📸 Vista Previa del Proyecto
 
-![Pantalla de Inicio](static/screenshots/panel.png)
+![Pantalla de Inicio](src/main/resources/static/screenshots/panel.png)
 
 ---
 
-![Panel de Gestión](static/screenshots/quiz.png)
+![Panel de Gestión](src/main/resources/static/screenshots/quiz.png)
 
 ---
 
